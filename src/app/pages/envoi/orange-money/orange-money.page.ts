@@ -15,6 +15,7 @@ export class OrangeMoneyPage implements OnInit {
   ngOnInit() {
     this.datarecharge.codeOperateur = '0025';
     this.datarecharge.sousoperateur = '0005';
+    this.datarecharge.operation = 'Cashin Orange-Money';
     this.datarecharge.image         = this.glb.IMG_URL + 'omoney.png';
     this.datarecharge.chemin        = 'envoi/orangemoney';
   }

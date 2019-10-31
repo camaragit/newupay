@@ -5,6 +5,8 @@ import { ComptePage } from './compte.page';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ListeWalletPage } from './liste-wallet/liste-wallet.page';
 import { AjoutWalletPage } from './ajout-wallet/ajout-wallet.page';
+import { CartePage } from './carte/carte.page';
+import { BanquePage } from './banque/banque.page';
 
 const routes: Routes = [
   {
@@ -18,6 +20,14 @@ const routes: Routes = [
   {
     path: 'ajoutwallet',
     component: AjoutWalletPage
+  },
+  {
+    path: 'carte',
+    component: CartePage
+  },
+  {
+    path: 'banque',
+    component: BanquePage
   }
 ];
 
@@ -26,6 +36,6 @@ const routes: Routes = [
     SharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ComptePage, ListeWalletPage, AjoutWalletPage]
+  declarations: [ComptePage, ListeWalletPage, AjoutWalletPage, BanquePage, CartePage]
 })
 export class ComptePageModule {}

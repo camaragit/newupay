@@ -8,12 +8,16 @@
 
   <div id="modaldiv">
     <div id="logoupaydiv">
-      <img src="assets/images/logo-upay-portrait.png" height="80"/>
+      <img src="assets/images/upay_portrait.PNG" height="80"/>
     </div>
     <div id="actionefectue">
       Résumé de la transaction
     </div>
     <div id="detaildiv">
+        <div class="details" *ngIf="commingData.operation">
+            <label>Opération :</label>
+            <span>{{commingData.operation}}</span>
+          </div>
       <div class="details" *ngIf="commingData.label">
         <label>{{commingData.label}}: </label>
         <span>{{commingData.telephone}}</span>

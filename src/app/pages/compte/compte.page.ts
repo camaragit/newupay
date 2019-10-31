@@ -12,8 +12,7 @@ export class ComptePage implements OnInit {
 
   ngOnInit() {
   }
-  meswallets(){
-    this.navCrtl.navigateForward('compte/listewallet')
-
+  meswallets(url: any) {
+    this.navCrtl.navigateForward(url);
   }
 }

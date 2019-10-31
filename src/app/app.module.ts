@@ -34,8 +34,9 @@ import { SharedModule } from './shared/shared.module';
 import { CallNumber } from '@ionic-native/call-number/ngx';
 import { AppVersion } from '@ionic-native/app-version/ngx';
 import { CodePush } from '@ionic-native/code-push/ngx';
-import {OneSignal} from "@ionic-native/onesignal/ngx";
+import {OneSignal} from '@ionic-native/onesignal/ngx';
 import { CheckService } from './services/check.service';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -44,7 +45,7 @@ import { CheckService } from './services/check.service';
     StatusBar, SQLite, Toast,  Sim, Network, OperatorImagePipe, LocalNotifications, CallNumber,
     SplashScreen, GlobalVariableService, Camera, Base64, ServiceService, HTTP, Contacts, FilePath, FormatcodePipe,
     MillierPipe, FormatphonePipe, AndroidPermissions,  FormatdatePipe, CoupurechainePipe, BarcodeScanner,
-    AppVersion, CodePush, OneSignal, CheckService,
+    AppVersion, CodePush, OneSignal, CheckService, InAppBrowser,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

@@ -2,68 +2,80 @@
   <div id="home">
     <span class="circlesmall"></span>
     <div id="entete">
-  <!--     <div id="avatar">
-        <img src="assets/images/avatar.png" height="43"/>
-      </div> -->
-      <div id="upaylight">
-        <img src="assets/images/upay-logo.png" height="43"/>
+      <div id="acceuil">
+        <div id="msgacceuil">Bienvenue <span>{{glbVariable.PRENOM}} {{glbVariable.NOM}}</span></div>
       </div>
-<!--       <div id="notif">
-        <img src="assets/images/notification.png" height="27"/>
-        <span id="nombre">5</span>
-      </div> -->
+      <ion-buttons slot="end">
+        <ion-menu-button color="light" autoHide="false"><ion-icon name="list"></ion-icon></ion-menu-button>
+    </ion-buttons>
     </div>
-    <div id="acceuil">
-      <div id="msgacceuil">Bienvenue, <span>{{glbVariable.PRENOM}} {{glbVariable.NOM}}</span></div>
-      <div id="datedujour">{{glbVariable.dateUpdate}}</div>
-    </div>
+
     <div id="middle">
-      <img src="assets/images/elipse_v2.png" style="max-height:100%;width:100%;position:absolute;bottom:-40px;left:0;z-index:0"/>
+      <!--       <img src="assets/images/elipse_v2.png" style="max-height:100%;width:100%;position:absolute;bottom:-40px;left:0;z-index:0"/>
+ -->
       <div id="slider">
         <div class="service">
           <div class="topservice">
             <div class="histo" (click)="historique()">
-              <img src="assets/images/calendar.png" height="25"/>
+              <!-- <img src="assets/images/calendar.png" height="25"/> -->
             </div>
             <div class="logoservice">
-              <img src="assets/images/wizall.png" height="43"/>
+              <img src="assets/images/upayv2.png" height="75" /><br />
+              <span>Bolé ñëp mën lépp</span>
             </div>
             <div class="actualise">
-              <img src="assets/images/refresh.png" height="23"/>
+              <!--   <img src="assets/images/refresh.png" height="23"/> -->
             </div>
           </div>
           <div id="soldecmpt">
             <label>Solde du compte</label>
             <div id="numcompte">
-              <span *ngIf="!glbVariable.ShowSolde">- - - - - - - </span>
-              <span *ngIf="glbVariable.ShowSolde">{{glbVariable.HEADER.montant}}F</span>
-              <img (click)="showSolde()" src="assets/images/secure.png" height="26"/>
+              <div style="width:10%;">
+
+              </div>
+              <div style="flex: 2;display: flex;justify-content: center">
+                <span><img src="assets/images/wi.png" height="22" /></span>
+                <span *ngIf="!glbVariable.ShowSolde">- - - - - - - </span>
+                <div *ngIf="glbVariable.ShowSolde">
+                  <span style="line-height:5px">{{glbVariable.HEADER.montant}}F</span>
+                  <span style="font-size: 8px;display:block;line-height: 0;margin-top: 7px">Mis à jour le
+                    {{glbVariable.dateUpdate}}</span>
+                </div>
+
+                <span><img (click)="showSolde()" src="assets/images/secure.png" height="22" /></span>
+              </div>
+              <div style="width:10%;">
+              </div>
+
             </div>
           </div>
           <span class="circlemedium"></span>
         </div>
-        <div class="dotslide">
-          <div>
-            <img src="assets/images/dot_1.png" height="9"/>
-            <img src="assets/images/dot_2.png" height="9"/>
-            <img src="assets/images/dot_1.png" height="9"/>
-          </div>
-        </div>
       </div>
-      <div (click)="mescartes()" id="account">
-        <img src="assets/images/cmpte.png" height="124"/>
+
+    </div>
+    <div class="dotslide">
+      <div (click)="home('envoi/transfertuv')"
+        style="flex: 1;display: flex;flex-direction: column;justify-content: center;align-items: center;border-right: 1px solid #b7b7b7;">
+        <img src="assets/images/nouveau.png" height="40" />
+        <span style="margin-top: 5px; ">Créditer</span>
+      </div>
+      <div (click)="home('compte')"
+        style="flex: 1;display: flex;flex-direction: column;justify-content: center;align-items: center">
+        <img src="assets/images/wallet2.png" height="40" />
+        <span style="margin-top: 5px">Mes comptes</span>
       </div>
     </div>
-    <div id="fonction">
+    <div style='margin-top:40px;' id="fonction">
       <div class="line">
         <div (click)="home(l.chemin)" class="fct" *ngFor="let l of ligneUne">
-          <img [src]="l.image" height="40"/>
+          <img [src]="l.image" height="40" />
           <span>{{l.libelle}}</span>
         </div>
       </div>
       <div class="line">
         <div (click)="home(l.chemin)" class="fct" *ngFor="let l of ligneDeux">
-          <img [src]="l.image" height="40"/>
+          <img [src]="l.image" height="40" />
           <span>{{l.libelle}}</span>
         </div>
 
@@ -73,20 +85,23 @@
   </div>
 
 </ion-content>
-
 <ion-footer>
-  <span class="shabot"></span>
-  <div id="pied">
-    <div (click)="historique()" id="trans">
-      <div><img src="assets/images/transaction.png" height="30"/></div>
-      <label>Transactions</label>
-      <span></span>
+  <div class="barremenu">
+
+    <div class="menuoption ">
     </div>
-    <div id="contactsupport">
-      <div id="support">
-        <img src="assets/images/support.png" height="40"/>
-        <label>Support</label>
-      </div>
+    <div class="menuoption">
+
+    </div>
+
+    <div (click)="paiement()" style="background: url('assets/images/demicercle.png') no-repeat #2C5AA3;background-size: 100%;"
+      class="qrcode">
+      <span class="qrcodelogo"><img style="width: 65px;" src="assets/images/qrcode.png" alt=""></span>
+    </div>
+
+    <div class="menuoption">
+    </div>
+    <div class="menuoption">
     </div>
   </div>
 </ion-footer>

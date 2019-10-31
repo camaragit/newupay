@@ -11,6 +11,7 @@ import { GlobalVariableService } from 'src/app/services/global-variable.service'
 export class FavorisPage implements OnInit {
   public headerTitle = 'Favoris';
   public favoris: any ;
+  public showfavoris = false;
   constructor(public serv: ServiceService,
               public glb: GlobalVariableService) { }
 
@@ -22,6 +23,7 @@ export class FavorisPage implements OnInit {
   }
 
   getfavoris() {
+    this.showfavoris = false;
     this.favoris = [];
     this.serv.getDataBase()
     .then((db: SQLiteObject) => {
@@ -29,9 +31,16 @@ export class FavorisPage implements OnInit {
       const values = [this.glb.NUMCOMPTE];
       db.executeSql(sql, values)
         .then((data) => {
-          for (let i = 0; i < data.rows.length; i++) {
+          if (data.rows.length > 0) {
+            this.showfavoris = true;
+            for (let i = 0; i < data.rows.length; i++) {
             this.favoris.push((data.rows.item(i)));
           }
+        } else {
+          this.showfavoris = false;
+
+          }
+
           })
         .catch(e => {});
     })

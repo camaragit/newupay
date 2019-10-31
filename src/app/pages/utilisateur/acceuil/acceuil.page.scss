@@ -1,6 +1,9 @@
 #home{
   position:relative;
   background: white;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .circlesmall{
   position: absolute;
@@ -18,13 +21,15 @@
   background: #2C5AA3
 }
 #entete > div{
-  margin:5px 0;
+  margin:5px 6px;
 }
+//charbel
 #avatar{
   padding-left:15px;
 }
-#avatar, #notif{
-  flex:1;
+//charbel
+#avatar{
+  width: 64px;
 }
 #notif{
   padding-right:28px;
@@ -49,17 +54,20 @@
   right:10px;
 }
 #acceuil{
-  padding:10px 15px;
+  padding:10px 19px;
   color:#ffffff;
+  flex: 1;
 }
 #msgacceuil{
-  font-size: 18px;
+  font-size: 16px;
 }
 #datedujour{
   color:#ffffff;
-  margin-top:10px;
+  margin-top:5px;
   font-family: 'helveticaneuelight';
+  font-size: 12px;
 }
+//charbel margin-left
 .service{
   background-image:url('../../../../assets/images/globe.png');
   background-color:rgba(255,255,255,0.9);
@@ -67,11 +75,10 @@
   background-repeat: no-repeat;
   background-position: center 100%;
   border-radius:15px;
-  width:90%;
-  height:136px;
+  width:91%;
+  height:160px;
   position:relative;
   overflow: hidden;
-  margin-left:25px;
   box-shadow: 0 0 10px rgba(86,83,83,0.6);
   -moz-box-shadow: 0 0 10px rgba(86,83,83,0.6);
   -webkit-box-shadow: 0 0 10px rgba(86,83,83,0.6);
@@ -94,7 +101,7 @@
   display:flex;
   align-items: center;
   justify-content: center;
-  padding:10px 0;
+  padding:0px;
 }
 .logoservice{
   flex:2;
@@ -110,14 +117,15 @@
 .histo{
   padding-left:15px;
 }
+//charbel
 #numcompte{
   position:relative;
   text-align:center;
-  margin:8px 0;
+  margin:5px 0;
+display: flex;
+  justify-content: center;
 }
 #numcompte img{
-  position:absolute;
-  right:30px;
 }
 #soldecmpt{
   text-align:center;
@@ -132,6 +140,8 @@
   font-family: 'helveticaneuebold';
   font-size: 16px;
   color:#2C5AA3;
+  margin-right: 10px;
+  margin-left: 10px;
 }
 #paiementinsta{
   height:35px;
@@ -151,22 +161,41 @@
 }
 .dotslide{
   padding:15px 0;
-  width:100%;
+  width: 91%;
+  border-radius: 10px;
+  margin-top: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+  align-self: center;
+  position: absolute;
+  top:210px;
+  min-height: 70px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  z-index: 9999999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .dotslide div{
   margin-left:43%;
 }
 .dotslide div img{
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+//modifi charbel
 #middle{
   display:flex;
-  justify-content: flex-end;
+  justify-content: center;
+  padding-bottom: 50px;
 }
+//modifi charbel
 #slider{
   position:relative;
-  width: calc(100% - 83px);
+  width: calc(100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
+
 #account{
   padding:0 15px;
   margin-top:5px;
@@ -260,22 +289,27 @@
   position: relative;
   z-index: 10;
 }
+//charbel
 #fonction{
   position: relative;
   z-index: 10;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
+//charbel
 #slider{
-  text-align: right;
+  text-align: center;
 }
 #slider > div{
   display:inline-block;
 }
+//charbel
 .service{
-  max-width: 294px
 }
 .dotslide {
-  width:100%;
-  text-align: right;
+
 }
 .dotslide div {
   margin: 0;

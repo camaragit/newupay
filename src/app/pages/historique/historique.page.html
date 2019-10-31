@@ -5,7 +5,7 @@
     </ion-title>
 
   </ion-toolbar>
-  <div class="service">
+<!--   <div class="service">
     <div class="topservice">
       <div class="histo" (click)="listerhisto()">
         <img src="assets/images/calendar.png" height="25"/>
@@ -27,34 +27,81 @@
     </div>
 
     <span class="circlemedium"></span>
+  </div> -->
+  <div class="service">
+    <div class="topservice">
+      <div class="histo">
+
+      </div>
+      <div class="logoservice">
+        <img src="assets/images/upayv2.png" height="50"/><br>
+        <span style="color: black;">Bolé ñëp mën lépp</span>
+      </div>
+      <div class="actualise">
+
+      </div>
+    </div>
+    <div id="soldecmpt">
+      <label>Solde du compte</label>
+      <div id="numcompte">
+        <div style="width:10%">
+
+        </div>
+        <div style="flex: 2;display: flex;justify-content: center">
+          <span (click)="listerhisto()"><img src="assets/images/calendar.png" height="22"/></span>
+          <div style="padding-left: 10px;padding-right: 10px;">
+             <span *ngIf="!glb.ShowSolde">- - - - - - - </span>
+             <div *ngIf="glb.ShowSolde">
+                <span style="line-height: 5px">{{glb.HEADER.montant}} F </span>
+                <span style="font-size: 8px;display:block;line-height: 0;margin-top: 7px">Mis à jour le {{glb.dateUpdate}}</span>
+             </div>
+
+          </div>
+
+          <span><img (click)="showSolde()" src="assets/images/secure.png" height="22"/></span>
+        </div>
+        <div style="width:10%">
+
+        </div>
+
+      </div>
+    </div>
+    <span class="circlemedium"></span>
   </div>
   </ion-header >
 
 <ion-content id="contenthisto" >
-  <div style="margin-bottom:40px;" class = "bodycontent">
-    <div class="titrehistorique" *ngIf="showdetails">Historique(5 dernières transactions)</div>
+  <div style="margin-bottom:40px; margin-top:30px;" class = "bodycontent">
+     <div *ngIf="!showdetails" style="display: flex;justify-content: center;align-items: center;flex-direction: column;margin-top: 160px;">
+        <img src="assets/images/noresult.png" alt="" style="width: 25%">
+        <p style="font-size: 24px;color:#2c5aa3;">Pas de résultats</p>
+    </div>
 
-     <div class = "ligne" style="display: flex; " *ngFor="let trx of transactions">
-        <div class="ligneitemfirst" style="align-items: center;border-left: 5px solid green;background: #f6fbf3;">
-          <img style="width: 70%" [src]="trx.image" alt="" onerror="this.onerror=null;this.src='assets/images/logo-upay-portrait.png'">
-          <span style="border: none;line-height: 1.9;font-size: 7px" class="ligneitem2" >Type: {{trx.Type}}</span>
-        </div>
-  
-        <div class="ligneitem">
-          <span class="ligneitem1" >{{trx.label}}</span>
-          <span class="ligneitem2" >{{trx.Numc}}</span>
-        </div>
-  
-        <div class="ligneitem">
-          <span class="ligneitem1" >MONTANT</span>
-          <span class="ligneitem2" >{{trx.Mnt |millier}}</span>
-        </div>
-        <div class="ligneitem">
-          <span style="border: none" class="ligneitem1">DATE</span>
-          <span style="border: none;padding-right: 10px;" class="ligneitem2" >{{trx.datetrx}}</span>
-          <span style="border: none;padding-right: 10px;font-size: 7px" class="ligneitem2" ><i>TRX: {{trx.Num}}</i></span>
-        </div>
-      </div>
+         <div class="titrehistorique" *ngIf="showdetails">Historique(10 dernières transactions)</div>
+
+        <div  class = "ligne" style="display: flex; " *ngFor="let trx of transactions">
+           <div class="ligneitemfirst" style="align-items: center;border-left: 5px solid green;background: #f6fbf3;">
+             <img style="width: 70%" [src]="trx.image" alt="" onerror="this.onerror=null;this.src='assets/images/upay_portrait.PNG'">
+             <span style="border: none;line-height: 1.9;font-size: 7px" class="ligneitem2" >Type: {{trx.Type}}</span>
+           </div>
+     
+           <div class="ligneitem">
+             <span class="ligneitem1" >{{trx.label}}</span>
+             <span class="ligneitem2" >{{trx.Numc}}</span>
+           </div>
+     
+           <div class="ligneitem">
+             <span class="ligneitem1" >MONTANT</span>
+             <span class="ligneitem2" >{{trx.Mnt |millier}}</span>
+           </div>
+           <div class="ligneitem">
+             <span style="border: none" class="ligneitem1">DATE</span>
+             <span style="border: none;padding-right: 10px;" class="ligneitem2" >{{trx.datetrx}}</span>
+             <span style="border: none;padding-right: 10px;font-size: 7px" class="ligneitem2" ><i>TRX: {{trx.Num}}</i></span>
+           </div>
+         </div>
+
+
   </div>
 
 </ion-content>

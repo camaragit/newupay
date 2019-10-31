@@ -128,7 +128,7 @@ export class WoyofalPage implements OnInit {
           } else { this.serv.showError('Opération échouée'); }
         }
       } else {
-        this.serv.showError('Reponse inattendue');
+        this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
       }
     }).catch(err => {
       this.serv.dismissloadin();
@@ -212,6 +212,7 @@ async showPin() {
                         label:    'Num Compteur',
                         telephone:  parametre.factures.IdClient,
                         codewoyofal: this.formatagechaine.transform(reponse.Token1, 5, '-'),
+                        operation: 'Recharge Compteur Woyofal',
                         energy: reponse.Energy};
       //  params.numFact = facture.numFact;
         this.serv.notifier(params);
@@ -248,7 +249,7 @@ async showPin() {
         this.serv.showError('Opération échouée');
       }
     } else {
-      this.serv.showError('reponse inattendue');
+      this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
 
     }
 

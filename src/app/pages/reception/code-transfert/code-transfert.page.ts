@@ -233,6 +233,7 @@ export class CodeTransfertPage implements OnInit {
           this.glb.HEADER.montant = this.millier.transform(reponse.mntPlfap);
           this.glb.dateUpdate = this.serv.getCurrentDate();
           parametre.recharge.codeTransfert = this.formatcode.transform(reponse.codTrans, 3, ' ');
+          parametre.recharge.operation = 'Reception code de transfert';
           this.serv.notifier(parametre.recharge);
           const mod = this.modal.create({
             component: ConfirmationComponent,
@@ -311,7 +312,7 @@ export class CodeTransfertPage implements OnInit {
           this.showdetails = false;
         } else { this.serv.showError('Opération échouée'); }
       } else {
-        this.serv.showError('Reponse inattendue');
+        this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
 
       }
 

@@ -9,7 +9,8 @@ import { GlobalVariableService } from 'src/app/services/global-variable.service'
 export class SenelecPage implements OnInit {
   public headerTitle = 'Senelec';
   public datareleve = {codeoper: '0027', image: this.glbVariable.IMG_URL + 'senelec.png', label: 'Police / Contrat',
-                       chemin: 'paiement/facturier/senelec', encaissementfile: 'encaissement/encaissementsenelec.php'};
+                       chemin: 'paiement/facturier/senelec',
+                       encaissementfile: 'encaissement/encaissementsenelec.php', operation: 'Paiement facture SENELEC'};
   constructor(public glbVariable: GlobalVariableService) { }
 
   ngOnInit() {

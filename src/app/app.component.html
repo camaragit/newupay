@@ -14,7 +14,6 @@
     <ion-split-pane>
       <ion-menu swipeGesture="false" type="overlay" style="--background: linear-gradient(#2d5ba4, #2364cc)!important;/*#2d5ba4*/">
         <ion-header>
-
           <div id="msg_acceuil">
             <div>
               <div>Bienvenue, {{glb.PRENOM}} {{glb.NOM}}</div>
@@ -30,15 +29,15 @@
           <div id="contentmenu"
             style="height:100%;display: flex;align-items: flex-end; justify-content: space-between;flex-direction: column;">
             <div id="utils">
-              <div>
+              <div (click)="verspage('utilisateur/resetpin')">
                 <span><img style="width:30%;" src="assets/images/icon-param.png" /></span>
                 <label>Paramétres</label>
               </div>
-              <div>
+              <div (click)="verspage('favoris')">
                 <span><img style="width:30%;" src="assets/images/icon-favoris.png" /></span>
                 <label>Favoris</label>
               </div>
-              <div>
+              <div (click)="verspage('utilisateur/support')">
                 <span><img style="width:30%;" src="assets/images/icon-msg.png" /></span>
                 <label>Contact</label>
               </div>
@@ -52,34 +51,35 @@
                     <label>Accueil</label>
                   </li>
                 </ion-menu-toggle>
-
-                <li>
+                 <li (click)="verspage('utilisateur/resetpin')">
                   <span><img style="height:20px;" src="assets/images/icon-profil.png" /></span>
-                  <label>Mon profil</label>
-                </li>
-                <li>
+                  <label>Changement pin</label>
+                </li> 
+                <li (click)="verspage('utilisateur/support')">
                   <span><img style="height:20px;"  src="assets/images/icon-assistance.png" /></span>
-                  <label>Assistance</label>
+                  <label>Service client</label>
                 </li>
                 <ion-menu-toggle auto-hide="false">
-                  <li (click)="versfavoris()">
+                  <li (click)="verspage('favoris')">
                     <span><img style="height:20px;"  src="assets/images/icon-fav.png" /></span>
                     <label>Favoris</label>
                   </li>
                 </ion-menu-toggle>
-                <li>
+           <!--      <li>
                   <span><img style="height:20px;"  src="assets/images/icon-cont.png" /></span>
                   <label>Mes contacts</label>
-                </li>
+                </li> -->
                 <ion-menu-toggle auto-hide="false">
                   <li (click)="vershistorique()">
                     <span><img style="height:20px;"  src="assets/images/icon-trx.png" /></span>
-                    <label>Mes transactions</label>
+                    <label>Historique transactions</label>
                   </li>
                 </ion-menu-toggle>
-                <li>
-                  <span><img style="height:20px;"  src="assets/images/icon-accueil.png" /></span>
-                  <label>Mentions légales</label>
+                <li (click)="verssite()">
+                    <a style="color: inherit; text-decoration: none;" href="http://www.upay.africa"><span><img style="height:20px;"  src="assets/images/icon-accueil.png" /></span>
+                      <label>Site web</label></a>
+                  <!-- <span><img style="height:20px;"  src="assets/images/icon-accueil.png" /></span>
+                  <label>Site web</label> -->
                 </li>
               </ul>
             </div>

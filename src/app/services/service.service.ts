@@ -9,7 +9,7 @@ import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { ConfirmationComponent } from '../components/confirmation/confirmation.component';
 import { FormControl, AbstractControl } from '@angular/forms';
 import { TransfertUniteValeurPage } from '../pages/envoi/transfert-unite-valeur/transfert-unite-valeur.page';
-
+import * as CryptoJS from 'crypto-js';
 @Injectable({
   providedIn: 'root'
 })
@@ -42,6 +42,9 @@ export class ServiceService {
       });
 
     });
+  }
+  encryptmessage(message: any) {
+    return CryptoJS.SHA512(message) + '';
   }
   showToast(message) {
     this.toast.showLongCenter(message).subscribe(value => {
@@ -201,7 +204,7 @@ export class ServiceService {
         db.executeSql(sql, values)
           .then((data) => {
             for (let i = 0; i < data.rows.length; i++) {
-              alert('data ' + JSON.stringify(data.rows.item(i)));
+             // alert('data ' + JSON.stringify(data.rows.item(i)));
             }
           })
           .catch(e => console.log(e));
@@ -334,6 +337,7 @@ export class ServiceService {
         } */
   }
   posts(service: string, body: any = {}, headers: any = {}): any {
+    body.numerocompte = this.glb.HEADER.agence * 1;
     if (this.glb.ISCONNECTED === false) {
       this.showToast('Veuillez revoir votre connexion internet !');
       return;
@@ -342,7 +346,7 @@ export class ServiceService {
       this.http.setDataSerializer('json');
       this.http.setSSLCertMode('nocheck');
       this.http.setRequestTimeout(90);
-     // alert('url ' + url);
+      // alert('Body ' + JSON.stringify(body));
       return this.http.post(url, body, headers);
     }
 
@@ -361,7 +365,7 @@ export class ServiceService {
         this.dismissloadin();
       }
       res.present();
-      if (text === 'Session expiree. Veuillez vous reconnecter!') {
+      if (text === 'Session expirée. Veuillez vous reconnecter!') {
         this.glb.IDSESS = this.glb.IDTERM = '';
         this.navCtrl.navigateRoot('utilisateur');
       }
@@ -458,7 +462,7 @@ export class ServiceService {
 
         } else { this.showError('Opération échouée'); }
       } else {
-        this.showError('Reponse inattendue');
+        this.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
 
       }
 
@@ -500,9 +504,9 @@ export class ServiceService {
 
           this.glb.HEADER.numcompte = plafond.numcompte;
           this.glb.HEADER.consomme = this.millier.transform(plafond.consome);
-        } else { this.showError(plafond.errorLabel); }
+        } else { this.showError('Opération échouée'); }
       } else {
-        this.showError('Réponse inattendue');
+        this.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
 
       }
 
@@ -560,6 +564,7 @@ export class ServiceService {
       // console.log(headers);
       // console.log(url);
       // console.log(body);
+      body.numerocompte = this.glb.HEADER.agence;
       this.http.setDataSerializer('json');
       this.http.setSSLCertMode('nocheck');
       this.http.setRequestTimeout(90);

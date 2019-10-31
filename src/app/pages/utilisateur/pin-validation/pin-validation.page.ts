@@ -52,7 +52,6 @@ export class PinValidationPage implements OnInit {
     return arra1;
   }
   async closeModal() {
-
     await this.modalController.dismiss(this.pin);
   }
   presse(key: any) {
@@ -79,7 +78,8 @@ export class PinValidationPage implements OnInit {
       // Autre que Connexion
 
       // Si code Pin saisi vaut code pin local
-      if (this.pin === this.glb.PIN) {
+       this.pin = this.serv.encryptmessage(this.pin);
+       if (this.pin === this.glb.PIN) {
         this.closeModal();
       } else {
         this.serv.showToast('Code pin incorrect !');

@@ -21,7 +21,7 @@ export class OperatorImagePipe implements PipeTransform {
       }
       return OperatorsImages[i].image;
 
-      } else { return this.src + 'logo-upay-portrait.png'; }
+      } else { return this.src + 'upay_portrait.PNG'; }
     }
 
 }

@@ -52,7 +52,7 @@ export class SouscriptionSuitePage implements OnInit {
     });
       } else {
         this.serv.showError('Impossible de lire un sms entrant');
-        alert('nok');
+      //  alert('nok');
       }
     });
   }
@@ -126,6 +126,8 @@ export class SouscriptionSuitePage implements OnInit {
   }
   souscription() {
     const userdata = this.Userdata.getRawValue();
+    userdata.codepin = this.serv.encryptmessage(userdata.codepin);
+    userdata.numpiece = userdata.numpiece.replace(/ /g, '');
     userdata.codeOTP = userdata.codeotp;
     this.serv.afficheloading();
     this.serv.posts('connexion/checkOTP.php', userdata, {}).then(data => {
@@ -146,10 +148,10 @@ export class SouscriptionSuitePage implements OnInit {
                   this.navCtrl.navigateRoot('utilisateur');
                 }, 200);
               } else {
-                this.serv.showError(souscription.errorLabel);
+                this.serv.showError('Opération échouée');
               }
             } else {
-              this.serv.showError('Reponse inattendue');
+              this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
             }
 
 
@@ -167,7 +169,7 @@ export class SouscriptionSuitePage implements OnInit {
           this.serv.showError('Opération échouée');
         }
       } else {
-        this.serv.showError('Reponse inattendue ');
+        this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard ');
       }
 
 

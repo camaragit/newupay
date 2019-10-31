@@ -14,6 +14,7 @@ export class SeddoPage implements OnInit {
   ngOnInit() {
     this.datarecharge.codeOperateur = '0005';
     this.datarecharge.sousoperateur = '0002';
+    this.datarecharge.operation = 'Recharge Seddo';
     this.datarecharge.image         = this.glb.IMG_URL + 'logo_Orange.png';
     this.datarecharge.chemin         = '/envoi/seddo';
   }

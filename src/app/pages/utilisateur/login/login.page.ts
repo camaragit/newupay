@@ -137,7 +137,7 @@ export class LoginPage implements OnInit {
                 this.serv.showError('Opération échouée');
               }
               } else {
-                this.serv.showError('Reponse inattendue' );
+                this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard' );
               }
 
             }).catch(error => {

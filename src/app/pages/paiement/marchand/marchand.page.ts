@@ -94,6 +94,7 @@ export class MarchandPage implements OnInit {
           parametres.recharge.frais = this.millier.transform(reponse.frais);
           parametres.recharge.nameContact = this.glb.PRENOM + ' ' + this.glb.NOM;
           parametres.recharge.label = 'Code Marchand';
+          parametres.recharge.operation = 'Paiement Marchand';
           parametres.recharge.telephone = reponse.telephone;
           parametres.recharge.montantTotal = this.millier.transform(reponse.montantTTC);
           const mod = this.modal.create({
@@ -110,7 +111,7 @@ export class MarchandPage implements OnInit {
           this.serv.showError('Opération échouée');
         }
       } else {
-        this.serv.showError('Reponse inattendue  ');
+        this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard  ');
       }
     })
       .catch(err => {

@@ -8,13 +8,14 @@ import { GlobalVariableService } from 'src/app/services/global-variable.service'
 })
 export class TigoCashPage implements OnInit {
 
-  public headerTitle = 'TIGO-CASH';
+  public headerTitle = 'FREE-MONEY';
   public datarecharge: any = {};
   constructor(public glb: GlobalVariableService) { }
 
   ngOnInit() {
     this.datarecharge.codeOperateur = '0022';
     this.datarecharge.sousoperateur = '0004';
+    this.datarecharge.operation = 'Cashin Free-Money';
     this.datarecharge.image         = this.glb.IMG_URL + 'logo_Tigo Cash.png';
     this.datarecharge.chemin         = 'envoi/tigocash';
 

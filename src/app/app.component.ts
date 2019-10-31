@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { Platform, NavController, AlertController, ToastController, ModalController } from '@ionic/angular';
+import { Platform, NavController, AlertController, ToastController, ModalController, MenuController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { ServiceService } from './services/service.service';
@@ -9,9 +9,6 @@ import { Router } from '@angular/router';
 import { AppVersion } from '@ionic-native/app-version/ngx';
 import { CodePush } from '@ionic-native/code-push/ngx';
 import { Network } from '@ionic-native/network/ngx';
-import {OneSignal} from '@ionic-native/onesignal/ngx';
-import { PubliciteComponent } from './components/publicite/publicite.component';
-import { MessageComponent } from './components/message/message.component';
 
 @Component({
   selector: 'app-root',
@@ -43,20 +40,20 @@ export class AppComponent {
     private codepush: CodePush,
     private network: Network,
     private modal: ModalController,
-    private toastController: ToastController,
-
+    private menu: MenuController,
+    private toastController: ToastController
   ) {
     this.initializeApp();
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
-      this.codepush.sync().subscribe((syncStatus) => {});
+      this.codepush.sync().subscribe(() => {});
       this.platform.pause.subscribe(() => {
         this.glb.DATEPAUSE = new Date();
       });
       this.platform.resume.subscribe(() => {
-        this.codepush.sync().subscribe((syncStatus) => {});
+        this.codepush.sync().subscribe(() => {});
         this.glb.DATEREPRISE = new Date();
         const diff = this.serv.dateDiff(this.glb.DATEPAUSE, this.glb.DATEREPRISE);
         const route = ['/utilisateur', '/utilisateur/souscription', '/utilisateur/suitesouscription',
@@ -64,13 +61,14 @@ export class AppComponent {
         if (!route.includes(this.router.url)) {
         if (diff.min >= 5) {
           this.closeModal();
-          this.serv.showError('Session expiree. Veuillez vous reconnecter!');
+          this.serv.showError('Session expirée. Veuillez vous reconnecter!');
         }
         }
       });
       this.checkNetwork();
       this.appVersion.getPackageName().then((val) => {
         this.glb.BASEURL = val === this.glb.prodpackageName ? this.glb.URLPROD : this.glb.URLTEST;
+        this.glb.minMontantMoga = val === this.glb.prodpackageName ? 500 : 10;
       });
       this.statusBar.backgroundColorByHexString('#2c5aa3');
       this.splashScreen.hide();
@@ -78,7 +76,7 @@ export class AppComponent {
       window.addEventListener('keyboardDidHide', () => {
         this.glb.showheader = true;
       });
-      window.addEventListener('keyboardDidShow', (event) => {
+      window.addEventListener('keyboardDidShow', () => {
         this.glb.showheader = false;
       });
       document.addEventListener('backbutton', () => {
@@ -89,9 +87,8 @@ export class AppComponent {
       });
     });
 
-
   }
-    async closeModal(){
+    async closeModal() {
   const modal = await this.modal.getTop();
   if (modal) {
       modal.dismiss();
@@ -102,7 +99,6 @@ export class AppComponent {
   }
   deconnexion() {
     this.navCtrl.navigateRoot('utilisateur');
-
   }
   vershistorique() {
     this.navCtrl.navigateForward('historique');
@@ -121,12 +117,11 @@ export class AppComponent {
         text: 'Non',
         role: 'cancel',
         cssClass: 'secondary',
-        handler: (blah) => {
+        handler: () => {
         }
       }, {
         text: 'oui',
         handler: () => {
-
           // tslint:disable-next-line: no-string-literal
           navigator['app'].exitApp();
         }
@@ -157,5 +152,13 @@ export class AppComponent {
       duration: 5000
     });
     toast.present();
+  }
+  verspage(url: any) {
+    this.navCtrl.navigateForward(url);
+    this.menu.toggle();
+  }
+  verssite() {
+    this.menu.toggle();
+    // this.tab.create('http://www.upay.africa','_system');
   }
 }

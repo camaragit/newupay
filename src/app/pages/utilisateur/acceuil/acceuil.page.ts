@@ -3,6 +3,8 @@ import {NavController, ModalController, MenuController} from '@ionic/angular';
 import { GlobalVariableService } from 'src/app/services/global-variable.service';
 import { PinValidationPage } from '../pin-validation/pin-validation.page';
 import { ServiceService } from 'src/app/services/service.service';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-acceuil',
@@ -15,7 +17,9 @@ export class AcceuilPage implements OnInit {
   constructor(public navCtrl: NavController,
               public glbVariable: GlobalVariableService,
               public serv: ServiceService,
-              public modal: ModalController ) { }
+              public barcodeScanner: BarcodeScanner,
+              public modal: ModalController ) {
+              }
   ngOnInit() {
     this.glbVariable.ShowSolde = false;
     this.ligneUne  = [{image: this.glbVariable.IMG_URL + 'homepaiement.png', libelle: 'Paiement', chemin: 'paiement'},
@@ -35,7 +39,7 @@ export class AcceuilPage implements OnInit {
 
         modal.onDidDismiss().then((codepin) => {
           if (codepin !== null && codepin.data) {
-            this.serv.getPlafond(); 
+            this.serv.getPlafond();
           } else {
 
             this.glbVariable.ShowSolde = false;
@@ -57,8 +61,20 @@ export class AcceuilPage implements OnInit {
   mescartes() {
     this.navCtrl.navigateForward('compte');
   }
-  historique(){
+  historique() {
     this.navCtrl.navigateForward('historique');
   }
+  paiement() {
+
+    this.barcodeScanner
+      .scan()
+      .then(barcodeData => {
+        const infos  = barcodeData.text.split(';');
+        // alert('infos recuperees ' + JSON.stringify(infos))
+
+      })
+      .catch(err => {
+      });
+}
 
 }

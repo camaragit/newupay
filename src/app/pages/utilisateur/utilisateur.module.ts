@@ -13,6 +13,7 @@ import { LoginPage } from './login/login.page';
 import { ResetPinPage } from './reset-pin/reset-pin.page';
 import { CheckComptePage } from './check-compte/check-compte.page';
 import { AccessGuard } from 'src/app/services/access.guard';
+import { SupportPage } from './support/support.page';
 
 const routes: Routes = [
   {
@@ -49,7 +50,12 @@ const routes: Routes = [
 {
   path: 'checkcompte',
   component: CheckComptePage
-}
+},
+{
+  path: 'support',
+  component: SupportPage
+},
+
 
 ];
 
@@ -59,7 +65,7 @@ const routes: Routes = [
     RouterModule.forChild(routes)
   ],
   declarations: [UtilisateurPage, BienvenuePage, AcceuilPage,
-                SouscriptionSuitePage, SouscriptionPage,
+                SouscriptionSuitePage, SouscriptionPage, SupportPage,
                 LoginPage, ResetPinPage, CheckComptePage]
 })
 export class UtilisateurPageModule {}

@@ -188,7 +188,7 @@ export class RechargeComponent implements OnInit {
     this.serv.posts('recharge/' + file + '.php', parametres, {}).then(data => {
       this.serv.dismissloadin();
       const reponse = JSON.parse(data.data);
-      //alert(JSON.stringify(reponse));
+      // alert(JSON.stringify(reponse));
       if (reponse.returnCode) {
         if (reponse.returnCode === '0') {
           // this.getContactName(parametres.recharge.telephone);
@@ -224,7 +224,14 @@ export class RechargeComponent implements OnInit {
           this.serv.insertFavoris(operateur);
           parametres.recharge.montant = this.monmillier.transform(parametres.recharge.montant);
           parametres.recharge.nameContact = this.contactName;
+          parametres.recharge.operation = this.datarecharge.operation;
           parametres.recharge.label = 'N° Tel';
+          if (parametres.recharge.oper === '0073') {
+            parametres.recharge.operation  = 'Transfert UPAY';
+          }
+          if (parametres.recharge.oper === '0074') {
+            parametres.recharge.operation  = 'Retrait UPAY';
+          }
           this.serv.notifier(parametres.recharge);
           const mod = this.modal.create({
             component: ConfirmationComponent,
@@ -237,25 +244,15 @@ export class RechargeComponent implements OnInit {
               this.getrecent();
             });
           });
-
           this.getrecent();
         } else { this.serv.showError('Opération échouée'); }
       } else {
-        this.serv.showError('Reponse inattendue');
-
+        this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
       }
-
     }).catch(err => {
-
       this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
-
     });
-
-
-
-
-
-  }
+}
 
   listecontacts() {
     // this.showName = false;

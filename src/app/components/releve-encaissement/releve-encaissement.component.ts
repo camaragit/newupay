@@ -139,7 +139,6 @@ encaisser(facture, params) {
   parametre.infoclient.pin = this.codePin;
   parametre.idTerm = this.glb.IDTERM;
   parametre.session = this.glb.IDSESS;
-  alert('reponse senelec ' + JSON.stringify(parametre));
   this.serv.afficheloading();
   this.serv.posts(this.datareleve.encaissementfile, parametre, {}).then(data => {
   this.serv.dismissloadin();
@@ -161,6 +160,7 @@ encaisser(facture, params) {
       };
     this.serv.insertFavoris(operateur);
     params.numFact = facture.numFact;
+    params.operation = this.datareleve.operation;
     this.serv.notifier(params);
     const mod = this.modal.create({
             component: ConfirmationComponent,
@@ -180,7 +180,7 @@ encaisser(facture, params) {
     this.serv.showError('Opération échouée');
   }
   } else {
-    this.serv.showError('Reponse inattendue');
+    this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
 
   }
 
@@ -196,7 +196,6 @@ encaisser(facture, params) {
     this.serv.afficheloading();
     this.serv.posts('encaissement/releve.php', parametre, {}).then(data => {
       const reponse = JSON.parse(data.data);
-     // alert(JSON.stringify(reponse));
       this.serv.dismissloadin();
       if (reponse !== false) {
         if (reponse.returnCode) {
@@ -205,7 +204,7 @@ encaisser(facture, params) {
             this.showInfoClient = true;
             this.infosClient.addControl('nom', new FormControl(''));
             if (typeof (reponse.NomClient) === 'object') {
-            this.infosClient.controls.prenom.setValue('');
+            this.infosClient.controls.prenom.setValue(this.glb.PRENOM + ' ' + this.glb.NOM);
             } else {
             this.infosClient.controls.prenom.setValue(reponse.NomClient);
             }
@@ -252,7 +251,7 @@ encaisser(facture, params) {
 
           } else { this.serv.showError('Opération échouée'); }
         } else {
-          this.serv.showError('Reponse inattendue');
+          this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
         }
 
       } else { this.serv.showError('Pas de facture correspondant'); }
@@ -260,7 +259,7 @@ encaisser(facture, params) {
 
     }).catch(err => {
       this.serv.dismissloadin();
-      this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard ' + JSON.stringify(err));
+      this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard ' );
 
     });
   }
@@ -362,7 +361,7 @@ encaisser(facture, params) {
           } else {
             this.serv.showError('Opération échouée');
           }
-        } else { this.serv.showError('Reponse inattendue'); }
+        } else { this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard'); }
 
       } else {
         this.serv.showError('Pas de facture correspondant');

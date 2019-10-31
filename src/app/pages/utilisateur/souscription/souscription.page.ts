@@ -33,7 +33,10 @@ export class SouscriptionPage implements OnInit {
   pictureVerso: any = '';
   urlRecto: any = '';
   urlVerso: any = '';
+  commingData: any;
+  public titre: any = 'Nouvelle souscription';
   public Userdata: FormGroup;
+  public desactiv = false;
   @ViewChild(IonContent) content: IonContent;
   constructor(private camera: Camera, public glb: GlobalVariableService,
               private sanitizer: DomSanitizer,
@@ -68,6 +71,17 @@ export class SouscriptionPage implements OnInit {
                   idSim2: [''],
                   mode: ['S']
                 });
+                if (this.router.getCurrentNavigation().extras.state) {
+                  this.commingData = this.router.getCurrentNavigation().extras.state.user;
+                  this.Userdata.controls.prenom.setValue(this.commingData.prenom);
+                  this.Userdata.controls.nom.setValue(this.commingData.nom);
+                  this.Userdata.controls.login.setValue(this.glb.PHONE);
+                  this.titre = 'Complément profil';
+                  this.desactiv = true;
+                  this.serv.showError('Merci de compléter votre profil');
+                } else {
+                  this.desactiv = false;
+                }
               }
 
   verspagesuivant() {
@@ -116,13 +130,13 @@ export class SouscriptionPage implements OnInit {
               this.http.uploadFile(this.glb.URLUPLOAD + 'uploadFile', {}, header, path, 'file').then((repon) => {
                 const rep = JSON.parse(repon.data);
                 this.urlRecto = rep.fileDownloadUri;
-                alert('uploadFile data ' + JSON.stringify(rep.fileDownloadUri));
+              //  alert('uploadFile data ' + JSON.stringify(rep.fileDownloadUri));
           }).catch((err) => {
-            alert('erreur uploadFile ' + JSON.stringify(err));
+           // alert('erreur uploadFile ' + JSON.stringify(err));
           });
 
             }).catch((err) => {
-              alert('erreur ws ' + JSON.stringify(err));
+              // alert('erreur ws ' + JSON.stringify(err));
             });
           })
           .catch((err) => {
@@ -165,13 +179,13 @@ export class SouscriptionPage implements OnInit {
             this.http.uploadFile(this.glb.URLUPLOAD + 'uploadFile', {}, header, path, 'file').then((repon) => {
               const rep = JSON.parse(repon.data);
               this.urlVerso = rep.fileDownloadUri;
-              alert('uploadFile data ' + JSON.stringify(rep.fileDownloadUri));
+              // alert('uploadFile data ' + JSON.stringify(rep.fileDownloadUri));
         }).catch((err) => {
-          alert('erreur uploadFile ' + JSON.stringify(err));
+         // alert('erreur uploadFile ' + JSON.stringify(err));
         });
 
           }).catch((err) => {
-            alert('erreur ws ' + JSON.stringify(err));
+          //  alert('erreur ws ' + JSON.stringify(err));
           });
         })
         .catch((err) => {
@@ -237,7 +251,7 @@ export class SouscriptionPage implements OnInit {
          this.router.navigate(['/utilisateur/suitesouscription'], navigationExtras);
        } else { this.serv.showError('Opération échouée'); }
        } else {
-         this.serv.showError('Reponse inattendue  ');
+         this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard  ');
        }
 
 
@@ -245,7 +259,7 @@ export class SouscriptionPage implements OnInit {
        this.serv.dismissloadin();
 
        this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
-       
+
      });
 
 

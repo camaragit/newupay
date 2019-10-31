@@ -1,6 +1,9 @@
 <app-header [headerTitle]="headerTitle"></app-header>
 <ion-content>
-    <app-contentmenu [services]= 'favoris'></app-contentmenu>
-
+    <div *ngIf="!showfavoris" style="display: flex;justify-content: center;align-items: center;flex-direction: column;margin-top: 160px;">
+        <img src="assets/images/noresult.png" alt="" style="width: 25%">
+        <p style="font-size: 24px;color:#2c5aa3;">Pas de résultats</p>
+    </div>
+    <app-contentmenu *ngIf="showfavoris" [services]= 'favoris'></app-contentmenu>
 </ion-content>
   <app-footer></app-footer>

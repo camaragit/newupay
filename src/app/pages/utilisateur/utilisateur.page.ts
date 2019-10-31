@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { GlobalVariableService } from 'src/app/services/global-variable.service';
 import { FormBuilder } from '@angular/forms';
 import { ServiceService } from 'src/app/services/service.service';
-import { NavController, Platform, ModalController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { NavController, Platform, ModalController, MenuController } from '@ionic/angular';
+import { Router, NavigationExtras } from '@angular/router';
 import { MillierPipe } from 'src/app/pipes/millier.pipe';
 import { Sim } from '@ionic-native/sim/ngx';
 import { FormatphonePipe } from 'src/app/pipes/formatphone.pipe';
@@ -22,6 +22,7 @@ export class UtilisateurPage implements OnInit {
   numbersTabs: number[];
   lastnumber: any;
   pin = '';
+  pinencrypted = '';
   IsNewUser = false;
   constructor(public storage: Storage, public glb: GlobalVariableService,
               public serv: ServiceService, public formBuilder: FormBuilder,
@@ -33,6 +34,7 @@ export class UtilisateurPage implements OnInit {
               public oneSignal: OneSignal,
               public formatphone: FormatphonePipe,
               public modalCrtl: ModalController,
+              private menu: MenuController,
               public androidPermissions: AndroidPermissions) {
 
   }
@@ -49,6 +51,7 @@ export class UtilisateurPage implements OnInit {
       this.pin = this.pin.substring(0, 4);
     }
     if (this.pin.length === 4) {
+      this.pinencrypted = this.serv.encryptmessage(this.pin);
       this.connecter();
       return;
     }
@@ -80,8 +83,15 @@ export class UtilisateurPage implements OnInit {
       this.oneSignal.handleNotificationOpened().subscribe((data) => {
         this.presentModal(data);
       });
-
+      this.oneSignal.getTags().then((data) => {
+       // alert('Tags ' + JSON.stringify(data));
+      });
       this.oneSignal.endInit();
+    });
+    this.menu.isOpen().then(data => {
+      if (data === true) {
+      this.menu.toggle();
+      }
     });
   }
   async presentModal(data: any) {
@@ -142,7 +152,7 @@ export class UtilisateurPage implements OnInit {
             params.login = params.login.substring(0, 3) !== '221' ? '221' + params.login : params.login;
             params.login = params.login.replace(/-/g, '');
             params.login = params.login.replace(/ /g, '');
-            params.codepin = this.pin;
+            params.codepin = this.pinencrypted;
             this.serv.afficheloading();
             this.serv.posts('connexion/connexion.php', params, {}).then(data => {
               this.serv.dismissloadin();
@@ -158,23 +168,36 @@ export class UtilisateurPage implements OnInit {
                     this.glb.PHONE =  this.glb.PHONE.substring(3);
                     this.glb.NOM = reponse.nom;
                     this.glb.PIN = reponse.pin;
-                    this.oneSignal.sendTags({compte: this.glb.HEADER.agence, telephone: this.glb.PHONE,
-                                             numeropiece: reponse.numpiece, prenom: reponse.prenom, nom: reponse.nom});
-                    if (typeof(reponse.mntPlf) !== 'object') {
-                      this.glb.HEADER.montant = this.monmillier.transform(reponse.mntPlf);
-                  } else { this.glb.HEADER.montant = '0'; }
-                    this.glb.dateUpdate = this.serv.getCurrentDate();
-                    this.glb.HEADER.numcompte = reponse.numcompte;
-                    this.glb.HEADER.consomme = this.monmillier.transform(reponse.consome);
-                    this.navCtrl.navigateRoot('utilisateur/bienvenue');
+                    if (!reponse.numpiece || typeof(reponse.numpiece) === 'object' || reponse.numpiece === '') {
+                      const navigationExtras: NavigationExtras = {
+                        state: {
+                          user: reponse
+                        }
+                      };
+                      this.navCtrl.navigateRoot('utilisateur/souscription', navigationExtras);
+
+                    } else {
+                      this.oneSignal.sendTags({compte: this.glb.HEADER.agence, telephone: this.glb.PHONE,
+                        numeropiece: reponse.numpiece, prenom: reponse.prenom, nom: reponse.nom});
+                      if (typeof(reponse.mntPlf) !== 'object') {
+                        this.glb.HEADER.montant = this.monmillier.transform(reponse.mntPlf);
+                      } else { this.glb.HEADER.montant = '0'; }
+                      this.glb.dateUpdate = this.serv.getCurrentDate();
+                      this.glb.HEADER.numcompte = reponse.numcompte;
+                      this.glb.HEADER.consomme = this.monmillier.transform(reponse.consome);
+                      this.navCtrl.navigateRoot('utilisateur/acceuil');
+
+                    }
+
                   } else {
                 if ( reponse.errorLabel === 'Code Pin incorrect !') {
-              //   this.toclear = true;
-                }
+                  this.serv.showError('Code Pin incorrect !');
+                } else {
                 this.serv.showError('Opération échouée');
+                }
               }
               } else {
-                this.serv.showError('Reponse inattendue' );
+                this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard' );
               }
 
             }).catch(error => {

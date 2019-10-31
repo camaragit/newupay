@@ -12,7 +12,7 @@
       </div>
       <div class="flexible" id="divflexible">
           <div style="text-align:center;color: #074a94;margin-top: 30px;font-size: 15px;">
-              Nouvelle souscription
+              {{titre}}
           </div>
         <div id="contentform">
           <form [formGroup]="Userdata" id="souscription_1" class="formulaire" >
@@ -30,7 +30,7 @@
             </div>
             <div class="formdiv" [style.border-color]="Userdata.controls.login.errors && Userdata.controls.login.touched ? 'red' : '#578cc9'">
               <label>Numéro de téléphone *</label>
-              <input type="tel" prefix="+221 " mask="00-000-00-00" formControlName="login" placeholder="Ecrivez N° téléphone ici" />
+              <input type="tel" prefix="+221 " [readOnly]="desactiv" mask="00-000-00-00" formControlName="login" placeholder="Ecrivez N° téléphone ici" />
               <div></div>
             </div>
             <div class="formdiv" [style.border-color]="Userdata.controls.numpiece.errors && Userdata.controls.numpiece.touched ? 'red' : '#578cc9'">

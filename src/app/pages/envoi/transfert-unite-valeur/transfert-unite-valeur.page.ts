@@ -16,24 +16,26 @@ declare var SMSReceive: any;
   styleUrls: ['./transfert-unite-valeur.page.scss']
 })
 export class TransfertUniteValeurPage implements OnInit {
-  public headerTitle = 'MOGA';
+  public headerTitle = 'Créditer';
   token: string;
   numtrx: any;
   sousop: any;
   idtrxEmoney: any;
   codepin = '';
+  sauvegardemontant: any = '';
+  montantreleve: any;
   public rechargeForm: FormGroup;
   ismodal;
   // private listeServiceDisponible = ['0005',  '0057', '0053'];
-  private listeServiceDisponible = ['0022', '0054'];
+  private listeServiceDisponible = ['0022', '0054', '0005'];
   constructor(public androidPermissions: AndroidPermissions,
-    public platform: Platform,
-    public callNumber: CallNumber,
-    public millier: MillierPipe,
-    public glb: GlobalVariableService,
-    public serv: ServiceService,
-    public modal: ModalController,
-    private formbuilder: FormBuilder) {
+              public platform: Platform,
+              public callNumber: CallNumber,
+              public millier: MillierPipe,
+              public glb: GlobalVariableService,
+              public serv: ServiceService,
+              public modal: ModalController,
+              private formbuilder: FormBuilder) {
     this.rechargeForm = this.formbuilder.group({
       telephone: ['', [Validators.required, CustomValidatorPhone]],
       montantrlv: ['', Validators.required],
@@ -44,10 +46,18 @@ export class TransfertUniteValeurPage implements OnInit {
       sousop: ['']
     });
     this.glb.isUSSDTriggered = false;
-    this.smsreceiver();
   }
+  ionViewWillEnter() {
+    this.glb.enecoute = false;
+    this.smsreceiver();
+}
   ngOnInit() {
     this.glb.isUSSDTriggered = false;
+    if (this.ismodal && this.ismodal === true) {
+      // tslint:disable-next-line: max-line-length
+      this.serv.showError('Le solde de votre compte est insuffisant pour effectuer cette opération. Merci de le créditer à partir d\' un wallet');
+    }
+
   }
   smsreceiver() {
     this.platform.ready().then(() => {
@@ -59,7 +69,7 @@ export class TransfertUniteValeurPage implements OnInit {
         });
       } else {
         this.serv.showError('Impossible de lire un sms entrant');
-        alert('nok');
+       // alert('nok');
       }
     });
   }
@@ -71,7 +81,7 @@ export class TransfertUniteValeurPage implements OnInit {
     this.platform.ready().then(() => {
       this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.RECEIVE_SMS).then(
         result => {
-          alert('Has permission? ' + result.hasPermission);
+         // alert('Has permission? ' + result.hasPermission);
           this.watchingSMS();
         },
         err => {
@@ -98,26 +108,31 @@ export class TransfertUniteValeurPage implements OnInit {
     }
   }
   stopwatching() {
-    SMSReceive.stopWatch(
-      () => {
-        //  alert('watch stopped');
-      },
-      () => {
-        // alert('watch stop failed');
-      }
-    );
+        SMSReceive.stopWatch(
+          () => {
+            this.glb.enecoute = false;
+          },
+          () => {
+          }
+        );
   }
 
   startWatching() {
-    SMSReceive.startWatch(
-      () => { },
-      () => { }
-    );
+    if (this.glb.enecoute === false) {
+      SMSReceive.startWatch(
+        () => {
+          this.glb.enecoute = true ;
+         },
+        (err) => {  }
+      );
+    }
+
   }
 
   restartWatching() {
     SMSReceive.stopWatch(
       () => {
+        this.glb.enecoute = false;
         this.startWatching();
       },
       () => { }
@@ -126,7 +141,6 @@ export class TransfertUniteValeurPage implements OnInit {
   processSMS(sms: any) {
     const expediteur = sms.address.toUpperCase();
     const message = sms.body;
-    // alert(JSON.stringify(sms));
     if (this.glb.isUSSDTriggered === true) {
       if (expediteur === 'ORANGEMONEY') {
         this.processOrangeMoney(message);
@@ -140,36 +154,55 @@ export class TransfertUniteValeurPage implements OnInit {
       if (expediteur === 'POSTECASH') {
         this.processpostecash(message);
       }
-      if (expediteur === 'TIGO-CASH') {
+      if (expediteur === 'FREE-MONEY') {
         this.processTigoCash(message);
       }
-
     }
     setTimeout(() => {
-      this.restartWatching();
+    // this.restartWatching();
     }, 200);
   }
   processEmoney(message: string) {
     const parta = 'Vous avez effectue un paiement de ';
     const partb = 'chez ' + this.glb.ATPS_EM_IDMERCHAND;
     if (message.includes(parta) && message.includes(partb)) {
-      this.cashinUPay();
+      const sub  = parta;
+      const rest = ' FCFA le';
+      const mntsms: any = message.substring(message.indexOf(sub) + sub.length, message.indexOf(rest));
+      const mntrlv = this.sauvegardemontant;
+      if (mntrlv * 1 !== mntsms * 1) {
+        //this.serv.showError('Le montant initié est different du montant que vous tentez de recharger');
+      } else {
+        this.cashinUPay();
+      }
     }
   }
   processTigoCash(message: string) {
     const msg = 'Paiement pour MERCHAND (' + this.glb.ATPS_TIGO_IDMERCHAND + ')';
+    const z = 'Montant: ';
+    let mnt: any = message.substring(message.indexOf(z) + z.length, message.indexOf('F.'));
+    mnt *= 1;
     if (message.includes(msg)) {
+      if ((mnt === this.sauvegardemontant * 1)) {
       this.cashinUPay();
+      } else {
+       // this.serv.showError('Le montant initié est different du montant que vous tentez de recharger');
+      }
     }
   }
 
   processOrangeMoney(message: string) {
     if (this.glb.isUSSDTriggered === true) {
-      const parta = 'Votre operation de';
+      const parta = 'Votre operation de ';
       const partb = 'a ete reglee par Orange Money.';
-      // const partc = 'le montant';
-      if (message.includes(parta) && message.includes(partb)) {
-        this.cashinUPay();
+      let mnt: any = message.substring(message.indexOf(parta) + parta.length, message.indexOf('FCFA'));
+      mnt *= 1;
+      if (message.includes(parta) && message.includes(partb) ) {
+        if ((mnt === this.sauvegardemontant * 1)) {
+          this.cashinUPay();
+          } else {
+            //this.serv.showError('Le montant initié est different du montant que vous tentez de recharger');
+          }
       }
     }
 
@@ -218,24 +251,24 @@ export class TransfertUniteValeurPage implements OnInit {
           this.serv.posts('recharge/validationemoney.php', parametres, {}).then((data: { data: string; }) => {
             const reponse = JSON.parse(data.data);
             if (reponse.returnCode) {
-  
+
               if (reponse.returnCode === '0') {
                 this.cashinUPay();
               } else { this.serv.dismissloadin(); this.serv.showError('Opération échouée'); }
             } else {
               this.serv.dismissloadin();
-              this.serv.showError('Reponse inattendue');
+              this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
             }
           }).catch((err: { status: number; }) => {
             this.serv.dismissloadin();
-  
+
               this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard ' + JSON.stringify(err));
-  
+
           });
-  
+
         }, 3000);
-  
-  
+
+
       }
     } */
   processpostecash(message) {
@@ -275,17 +308,26 @@ export class TransfertUniteValeurPage implements OnInit {
     parametres.recharge.numtrx = this.numtrx ? this.numtrx : this.glb.PHONE;
     parametres.recharge.oper = this.rechargeForm.controls.service.value;
     parametres.recharge.codeEs = '221' + this.glb.PHONE;
-    parametres.recharge.montant = this.rechargeForm.controls.montantrlv.value; // .replace(/ /g, '');
+    parametres.recharge.montant = this.montantreleve + ''; // this.rechargeForm.controls.montantrlv.value; // .replace(/ /g, '');
     parametres.recharge.telephone = this.glb.PHONE; // datarecharge.recharge.telephone.replace(/-/g, '');
+    parametres.recharge.operation = 'Recharge UPay (MOGA)'; // datarecharge.recharge.telephone.replace(/-/g, '');
     parametres.idTerm = this.glb.IDTERM;
     parametres.session = this.glb.IDSESS;
+/*     alert('recharges cashing up ' + JSON.stringify(this.rechargeForm.getRawValue()));
+    alert('sauvegarde mnt' + this.sauvegardemontant);
+    alert('parametres avant' + JSON.stringify(parametres)); */
+  /*  alert('this.glb.isUSSDTriggered ' + this.glb.isUSSDTriggered); */
+    if (parametres.recharge.montant === '') {
+      parametres.recharge.montant = this.sauvegardemontant + '';
+  }
+    alert('parametres apres' + JSON.stringify(parametres));
+
     this.serv.posts('recharge/cashinMoga.php', parametres, {}).then((data: { data: string; }) => {
       this.serv.dismissloadin();
       const reponse = JSON.parse(data.data);
       if (reponse.returnCode) {
         if (reponse.returnCode === '0') {
-          this.rechargeForm.reset();
-          this.rechargeForm.controls.service.setValue('0005');
+          this.reinit();
           this.glb.HEADER.montant = this.millier.transform(reponse.mntPlfap);
           this.glb.dateUpdate = this.serv.getCurrentDate();
           parametres.recharge.montant = this.millier.transform(parametres.recharge.montant);
@@ -312,7 +354,7 @@ export class TransfertUniteValeurPage implements OnInit {
           this.serv.showError('Opération échouée');
         }
       } else {
-        this.serv.showError('Reponse inattendue  ');
+        this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard  ');
       }
 
     }
@@ -320,10 +362,17 @@ export class TransfertUniteValeurPage implements OnInit {
       this.serv.dismissloadin();
       this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
     });
+    return;
   }
   async showPin() {
-    const service = this.rechargeForm.controls.service.value;
-    if (!this.listeServiceDisponible.includes(service)) {
+    this.montantreleve = this.sauvegardemontant = this.rechargeForm.controls.montantrlv.value;
+    const montant = this.rechargeForm.controls.montantrlv.value * 1;
+
+    if ((montant < this.glb.minMontantMoga) || (this.montantreleve * 1 < this.glb.minMontantMoga)) {
+      this.serv.showError('Le montant minimum est de ' + this.glb.minMontantMoga + 'F' );
+    } else {
+          const service = this.rechargeForm.controls.service.value;
+          if (!this.listeServiceDisponible.includes(service)) {
       this.serv.showAlert('Service en cours developpement');
     } else {
       if (this.ismodal !== true) {
@@ -347,8 +396,15 @@ export class TransfertUniteValeurPage implements OnInit {
 
 
     }
+    }
 
-
+  }
+  reinit() {
+    this.rechargeForm.controls.montantrlv.setValue('');
+    this.glb.isUSSDTriggered = false;
+    this.montantreleve = '';
+    this.rechargeForm.controls.service.setValue('0005');
+    this.restartWatching();
   }
   initier() {
     const service = this.rechargeForm.controls.service.value;
@@ -373,7 +429,6 @@ export class TransfertUniteValeurPage implements OnInit {
         let url = 'https://testwpay.wizall.com/o/token/';
         this.serv.post(url, params).then((data: { data: string; }) => {
           // this.serv.dismissloadin();
-
           const reponse = JSON.parse(data.data);
           // alert('reponse Token ' + JSON.stringify(reponse));
           if (reponse.access_token) {
@@ -478,7 +533,7 @@ export class TransfertUniteValeurPage implements OnInit {
       const reponse = JSON.parse(data.data);
       if (reponse.returnCode) {
         if (reponse.returnCode === '0') {
-          alert(JSON.stringify(reponse));
+         // alert(JSON.stringify(reponse));
           if (service === '0054') {
             this.idtrxEmoney = reponse.numtrx;
           }
@@ -490,7 +545,7 @@ export class TransfertUniteValeurPage implements OnInit {
 
       } else {
         this.serv.dismissloadin();
-        this.serv.showError('Reponse inattendue ');
+        this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard ');
       }
     }
     ).catch((err: { status: number; }) => {

@@ -6,7 +6,7 @@
       <div class="flexcenter bgcolorwhite" *ngIf="commingData">
         <div id="message">
           <span *ngIf="commingData.type=='recharge'">
-                      Vous allez recharger la somme de <strong>{{commingData.montant}} F</strong> sur le numero
+                      Vous allez recharger la somme de <strong>{{commingData.montant}} F</strong> sur le numéro
           <span id="valeurmsg"><span *ngIf="commingData.nameContact!=''"> de {{commingData.nameContact}} </span>{{commingData.telephone}} <br>
           <span *ngIf="commingData.frais">Dont frais: {{commingData.frais}} F</span> 
          </span>

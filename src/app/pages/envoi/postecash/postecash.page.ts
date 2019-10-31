@@ -8,7 +8,8 @@ import { GlobalVariableService } from 'src/app/services/global-variable.service'
 })
 export class PostecashPage implements OnInit {
   public headerTitle = 'postecash';
-  public datacashin = {image: this.glb.IMG_URL + 'postecash.png', chemin: 'envoi/postecash', codeOper: '0053', sousOper: '0001' };
+  // tslint:disable-next-line: max-line-length
+  public datacashin = {image: this.glb.IMG_URL + 'postecash.png', chemin: 'envoi/postecash', codeOper: '0053', sousOper: '0001', operation: ' Cashin Postecash' };
 
   constructor(public glb: GlobalVariableService) { }
 

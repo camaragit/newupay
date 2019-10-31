@@ -41,7 +41,7 @@ export class CheckComptePage implements OnInit {
           this.navCtrl.navigateRoot('utilisateur');
         } else { this.serv.showError('Opération échouée'); }
       } else {
-        this.serv.showError('Reponse inattendue  ');
+        this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard  ');
       }
 
 

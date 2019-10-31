@@ -21,13 +21,11 @@
                 <img style="height: 45px;"  [src]="walletSelected.image" alt="">
               </div>
             </div>
-        
-        
-            <div style="background: #fff;margin-bottom: 18px;padding: 10px 10px;" class="formdiv">
-              <label>Renseignez votre code secret</label>
+    <!--         <div style="background: #fff;margin-bottom: 18px;padding: 10px 10px;" class="formdiv">
+              <label>Renseignez votre code pin</label>
               <input formControlName="codepin" type="tel" mask="XXXX" [hiddenInput]="true"/>
               <div></div>
-            </div>
+            </div> -->
             <div class="flex2 flexcenter" id="btncontrol">
         
               <button [style.background]="!Rechargedata.valid ? '#CFD8DC' : '#074A94'" [disabled]="!Rechargedata.valid" style="width: 100%;border-radius: 5px;" id="btnsvt" class="btnbleu" (click)="insertWallet()" >Valider</button>

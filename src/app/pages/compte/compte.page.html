@@ -3,18 +3,18 @@
 <ion-content>
   <div class="bodycontent">
     <div style="justify-content:center;padding: 10px;padding-left: 5px;padding-right: 5px;display: flex;width:100%;flex-wrap: wrap;">
-      <div (click)="meswallets()" class="itemenu" >
+      <div (click)="meswallets('compte/listewallet')" class="itemenu" >
         <img style="height: 35px;" src="assets/images/wallet.png" alt="">
         <span class="labelitem">WALLETS</span>
       </div>
 
-      <div class="itemenu">
+      <div (click)="meswallets('compte/carte')" class="itemenu">
         <img style="height: 35px;" src="assets/images/carte.png" alt="">
         <span class="labelitem">CARTES</span>
       </div>
-      <div class="itemenu">
+      <div (click)="meswallets('compte/banque')" class="itemenu">
         <img style="height: 35px;" src="assets/images/compte2.png" alt="">
-        <span class="labelitem">COMPTES</span>
+        <span class="labelitem">BANQUES</span>
       </div>
     </div>
   </div>

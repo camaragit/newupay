@@ -92,7 +92,7 @@ export class CashinReleveComponent implements OnInit {
             if (val != null) {
               this.rechargeForm.controls.telephone.setValue(val);
             } else {
-              this.serv.showError('Impossible de recuperer votre numero telephone');
+              this.serv.showError('Impossible de recuperer votre numéro telephone');
             }
 
           });
@@ -101,7 +101,7 @@ export class CashinReleveComponent implements OnInit {
 
       } else { this.serv.showError('Opération échouée'); }
       } else {
-        this.serv.showError('Reponse inattendue');
+        this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
 
       }
 
@@ -221,6 +221,7 @@ export class CashinReleveComponent implements OnInit {
           parametres.recharge.montant     =  this.rechargeForm.getRawValue().montant;
           parametres.recharge.montant     = this.monmillier.transform(parametres.recharge.montant);
           parametres.recharge.nameContact = this.contactName;
+          parametres.recharge.operation = this.cashindata.operation;
           if (this.cashindata.codeOper === '0057' && this.cashindata.sousOper ===  '0002') {
             parametres.recharge.label = 'N° Badge';
           } else {
@@ -243,7 +244,7 @@ export class CashinReleveComponent implements OnInit {
           this.rechargeForm.reset();
         } else { this.serv.showError('Opération échouée'); }
       } else {
-        this.serv.showError('Reponse inattendue');
+        this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
 
       }
 

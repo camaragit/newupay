@@ -14,6 +14,7 @@ export class YakalmaPage implements OnInit {
   ngOnInit() {
     this.datarecharge.codeOperateur = '0034';
     this.datarecharge.sousoperateur = '0002';
+    this.datarecharge.operation = 'Recharge Yakalma';
     this.datarecharge.image         = this.glb.IMG_URL + 'logo_Expresso.png';
     this.datarecharge.chemin        = 'envoi/yakalma';
 

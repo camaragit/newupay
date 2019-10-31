@@ -26,7 +26,7 @@ export class AjoutWalletPage implements OnInit {
               public serv: ServiceService) {
                 this.Rechargedata = this.formBuilder.group({
                   telephone: ['', [Validators.required, CustomValidatorPhone]],
-                  codepin: ['', Validators.required]});
+                  codepin: ['']});
 
   }
 
@@ -46,11 +46,13 @@ export class AjoutWalletPage implements OnInit {
     this.walletSelected = wallet;
   }
   insertWallet() {
-    if (this.Rechargedata.controls.codepin.value !== this.glbVariable.PIN) {
+    this.walletSelected.telephone = this.Rechargedata.controls.telephone.value;
+    this.serv.insertWallet(this.walletSelected);
+/*     if (this.serv.encryptmessage(this.Rechargedata.controls.codepin.value) !== this.glbVariable.PIN) {
       this.serv.showError('Code Pin incorrect !');
     } else {
       this.walletSelected.telephone = this.Rechargedata.controls.telephone.value;
       this.serv.insertWallet(this.walletSelected);
-    }
+    } */
   }
 }

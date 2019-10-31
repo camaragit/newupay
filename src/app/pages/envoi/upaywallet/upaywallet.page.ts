@@ -9,14 +9,16 @@ import { GlobalVariableService } from 'src/app/services/global-variable.service'
 export class UpaywalletPage implements OnInit {
   public headerTitle = 'UPAY';
   datarecharge: any = {};
-  public datacashin = {image: this.glb.IMG_URL + 'logo-upay-portrait.png', chemin: 'envoi/upaywallet', codeOper: '0074', sousOper: '' };
+  public datacashin = {image: this.glb.IMG_URL + 'upay_portrait.PNG', chemin: 'envoi/upaywallet',
+                      codeOper: '0074', sousOper: '', operation: 'Retrait UPAY' };
   service: string;
   constructor(public glb: GlobalVariableService) { }
 
   ngOnInit() {
     this.datarecharge.codeOperateur = '0073';
     this.datarecharge.sousoperateur = '';
-    this.datarecharge.image         = this.glb.IMG_URL + 'logo-upay-portrait.png';
+    this.datarecharge.operation = 'Recharge UPAY';
+    this.datarecharge.image         = this.glb.IMG_URL + 'upay_portrait.PNG';
     this.datarecharge.chemin        = 'envoi/upaywallet';
     this.service                    = 'Cashin';
   }

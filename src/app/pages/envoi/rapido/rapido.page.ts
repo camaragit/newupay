@@ -8,7 +8,7 @@ import { GlobalVariableService } from 'src/app/services/global-variable.service'
 })
 export class RapidoPage implements OnInit {
   public headerTitle = 'rapido';
-  public datacashin = {image: this.glb.IMG_URL + 'logo_rapido.png', chemin: 'envoi/rapido', codeOper: '0057', sousOper: '0002' };
+  public datacashin = {image: this.glb.IMG_URL + 'logo_rapido.png', chemin: 'envoi/rapido', codeOper: '0057', sousOper: '0002', operation: ' Recharge Rapido' };
   constructor(public glb: GlobalVariableService) { }
 
   ngOnInit() {

@@ -20,7 +20,7 @@ export class ResetPinPage implements OnInit {
     this.Userdata = this.formBuilder.group({
       login: ['', [Validators.required, CustomValidatorPhone]],
       numpiece: ['', Validators.required],
-      typepiece: ['', Validators.required],
+      typepiece: [''],
       prenom: [''],
       email: [''],
       nom: [''],
@@ -47,7 +47,7 @@ export class ResetPinPage implements OnInit {
           this.router.navigate(['/utilisateur/suitesouscription'], navigationExtras);
         } else { this.serv.showError('Opération échouée'); }
       } else {
-        this.serv.showError('Reponse inattendue ');
+        this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard ');
       }
 
 
