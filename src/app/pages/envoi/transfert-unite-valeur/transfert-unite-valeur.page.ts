@@ -310,7 +310,7 @@ export class TransfertUniteValeurPage implements OnInit {
     parametres.recharge.codeEs = '221' + this.glb.PHONE;
     parametres.recharge.montant = this.montantreleve + ''; // this.rechargeForm.controls.montantrlv.value; // .replace(/ /g, '');
     parametres.recharge.telephone = this.glb.PHONE; // datarecharge.recharge.telephone.replace(/-/g, '');
-    parametres.recharge.operation = 'Recharge UPay (MOGA)'; // datarecharge.recharge.telephone.replace(/-/g, '');
+    parametres.recharge.operation = 'Recharge UPay'; // datarecharge.recharge.telephone.replace(/-/g, '');
     parametres.idTerm = this.glb.IDTERM;
     parametres.session = this.glb.IDSESS;
 /*     alert('recharges cashing up ' + JSON.stringify(this.rechargeForm.getRawValue()));

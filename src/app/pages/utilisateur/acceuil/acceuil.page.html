@@ -2,8 +2,8 @@
   <div id="home">
     <span class="circlesmall"></span>
     <div id="entete">
-      <div id="acceuil">
-        <div id="msgacceuil">Bienvenue <span>{{glbVariable.PRENOM}} {{glbVariable.NOM}}</span></div>
+      <div id="acceuil" style="width: calc(100% - 87px);">
+        <div id="msgacceuil" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">Bienvenue, {{glbVariable.PRENOM}} {{glbVariable.NOM}}</div>
       </div>
       <ion-buttons slot="end">
         <ion-menu-button color="light" autoHide="false"><ion-icon name="list"></ion-icon></ion-menu-button>
@@ -37,7 +37,7 @@
                 <span><img src="assets/images/wi.png" height="22" /></span>
                 <span *ngIf="!glbVariable.ShowSolde">- - - - - - - </span>
                 <div *ngIf="glbVariable.ShowSolde">
-                  <span style="line-height:5px">{{glbVariable.HEADER.montant}}F</span>
+                  <span style="line-height:5px">{{glbVariable.HEADER.montant}} <span style="font-size: 11px; line-height:0; margin-left:0;">XOF</span></span>
                   <span style="font-size: 8px;display:block;line-height: 0;margin-top: 7px">Mis à jour le
                     {{glbVariable.dateUpdate}}</span>
                 </div>

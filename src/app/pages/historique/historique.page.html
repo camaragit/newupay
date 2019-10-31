@@ -3,6 +3,9 @@
     <ion-title style="height: 45px;">
       HISTORIQUE
     </ion-title>
+    <ion-buttons slot="end">
+        <ion-menu-button color="light" autoHide="false"><ion-icon name="list"></ion-icon></ion-menu-button>
+    </ion-buttons>
 
   </ion-toolbar>
 <!--   <div class="service">
@@ -52,7 +55,7 @@
           <div style="padding-left: 10px;padding-right: 10px;">
              <span *ngIf="!glb.ShowSolde">- - - - - - - </span>
              <div *ngIf="glb.ShowSolde">
-                <span style="line-height: 5px">{{glb.HEADER.montant}} F </span>
+                <span style="line-height: 5px">{{glb.HEADER.montant}} <span style="font-size: 11px;">XOF</span> </span>
                 <span style="font-size: 8px;display:block;line-height: 0;margin-top: 7px">Mis à jour le {{glb.dateUpdate}}</span>
              </div>
 
