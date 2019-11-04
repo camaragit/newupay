@@ -44,7 +44,7 @@ export class ServiceService {
     });
   }
   encryptmessage(message: any) {
-    
+
     return CryptoJS.SHA512(message) + '';
   }
   showToast(message) {
@@ -484,12 +484,20 @@ export class ServiceService {
     return retour === -1;
   }
   notifier(trx) {
-    this.localNotifications.schedule({
-      id: 1,
-      text: 'Transaction effecutée avec succés, cliquer pour voir les details',
-      sound: 'file://sound.mp3',
-      data: { recu: trx }
-    });
+/*     this.localNotifications.hasPermission().then(() => {
+      try {
+        this.localNotifications.schedule({
+          id: 1,
+          text: 'Transaction effecutée avec succés, cliquer pour voir les details',
+           sound: 'file://sound.mp3',
+          data: { recu: trx }
+        });
+      } catch (error) {
+        alert('error schedule ' + JSON.stringify(error));
+      }
+    }).catch(err => {
+      alert('Erreur notif ' + JSON.stringify(err));
+    }); */
   }
 
   getPlafond() {

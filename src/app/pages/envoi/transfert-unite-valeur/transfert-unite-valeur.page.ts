@@ -171,7 +171,7 @@ export class TransfertUniteValeurPage implements OnInit {
       const mntsms: any = message.substring(message.indexOf(sub) + sub.length, message.indexOf(rest));
       const mntrlv = this.sauvegardemontant;
       if (mntrlv * 1 !== mntsms * 1) {
-        //this.serv.showError('Le montant initié est different du montant que vous tentez de recharger');
+        // this.serv.showError('Le montant initié est different du montant que vous tentez de recharger');
       } else {
         this.cashinUPay();
       }
@@ -201,7 +201,7 @@ export class TransfertUniteValeurPage implements OnInit {
         if ((mnt === this.sauvegardemontant * 1)) {
           this.cashinUPay();
           } else {
-            //this.serv.showError('Le montant initié est different du montant que vous tentez de recharger');
+            // this.serv.showError('Le montant initié est different du montant que vous tentez de recharger');
           }
       }
     }
@@ -229,7 +229,6 @@ export class TransfertUniteValeurPage implements OnInit {
           }
         } else {
           alert(JSON.stringify(reponse));
-
         }
       })
         .catch((err: { status: number; }) => {
@@ -351,7 +350,7 @@ export class TransfertUniteValeurPage implements OnInit {
             });
           }
         } else {
-          this.serv.showError('Opération échouée');
+          this.serv.showError('Opération échouée ');
         }
       } else {
         this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard  ');
@@ -359,8 +358,8 @@ export class TransfertUniteValeurPage implements OnInit {
 
     }
     ).catch((err) => {
-      this.serv.dismissloadin();
-      this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
+        this.serv.dismissloadin();
+        this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard ' + JSON.stringify(err));
     });
     return;
   }
@@ -518,6 +517,7 @@ export class TransfertUniteValeurPage implements OnInit {
         });
     }, 200);
   }
+
   initOperation(service: string) {
     const transfert = { montant: this.rechargeForm.controls.montantrlv.value, telSource: this.glb.PHONE, opersource: service };
     const params = {
