@@ -128,6 +128,8 @@ export class SouscriptionSuitePage implements OnInit {
     const userdata = this.Userdata.getRawValue();
     userdata.codepin = this.serv.encryptmessage(userdata.codepin);
     userdata.numpiece = userdata.numpiece.replace(/ /g, '');
+    userdata.numpiece = userdata.numpiece.replace(/-/g, '');
+    userdata.numpiece = userdata.numpiece.replace(/_/g, '');
     userdata.codeOTP = userdata.codeotp;
     this.serv.afficheloading();
     this.serv.posts('connexion/checkOTP.php', userdata, {}).then(data => {

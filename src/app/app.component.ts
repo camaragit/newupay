@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
-import { Platform, NavController, AlertController, ToastController, ModalController, MenuController } from '@ionic/angular';
+// tslint:disable-next-line: max-line-length
+import { Platform, IonRouterOutlet, NavController, AlertController, ToastController, ModalController, MenuController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { ServiceService } from './services/service.service';
@@ -27,6 +28,7 @@ export class AppComponent {
       icon: 'list'
     }
   ];
+  @ViewChild(IonRouterOutlet) routerOutlet: IonRouterOutlet;
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
@@ -48,6 +50,21 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
+      this.platform.backButton.subscribeWithPriority(0, () => {
+      if (!this.glb.qrcmode) {
+        if (this.routerOutlet && this.routerOutlet.canGoBack()) {
+          this.routerOutlet.pop();
+       } else {
+        const routes = ['/utilisateur', '/utilisateur/acceuil'];
+        if (routes.includes(this.router.url)) {
+          this.presentAlert();
+        }
+       }
+      } else {
+        this.glb.qrcmode = false;
+      }
+
+      });
       this.codepush.sync().subscribe(() => {});
       this.platform.pause.subscribe(() => {
         this.glb.DATEPAUSE = new Date();
@@ -79,12 +96,16 @@ export class AppComponent {
       window.addEventListener('keyboardDidShow', () => {
         this.glb.showheader = false;
       });
-      document.addEventListener('backbutton', () => {
+/*       document.addEventListener('backbutton', () => {
+        alert(this.router.url)
+        if(this.router.url === '/favoris'){
+          this.router.navigateByUrl('/favoris');
+        }
         const routes = ['/utilisateur', '/utilisateur/acceuil'];
         if (routes.includes(this.router.url)) {
           this.presentAlert();
         }
-      });
+      }); */
     });
 
   }

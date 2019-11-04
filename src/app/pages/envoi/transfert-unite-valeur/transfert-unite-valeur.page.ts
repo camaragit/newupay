@@ -320,7 +320,7 @@ export class TransfertUniteValeurPage implements OnInit {
     if (parametres.recharge.montant === '') {
       parametres.recharge.montant = this.sauvegardemontant + '';
   }
-    alert('parametres apres' + JSON.stringify(parametres));
+   // alert('parametres apres' + JSON.stringify(parametres));
 
     this.serv.posts('recharge/cashinMoga.php', parametres, {}).then((data: { data: string; }) => {
       this.serv.dismissloadin();

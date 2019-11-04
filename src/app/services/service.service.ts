@@ -44,6 +44,7 @@ export class ServiceService {
     });
   }
   encryptmessage(message: any) {
+    
     return CryptoJS.SHA512(message) + '';
   }
   showToast(message) {

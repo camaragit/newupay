@@ -96,7 +96,7 @@ export class HistoriquePage implements OnInit {
     this.serv.posts(url, parametre, {}).then(data => {
       this.serv.dismissloadin();
       const reponse: any = JSON.parse(data.data);
-     // alert(JSON.stringify(reponse));
+      //alert(JSON.stringify(reponse));
       if (reponse.returnCode === '0') {
         this.showdetails = true;
         if (mode === 'all') {
@@ -143,9 +143,8 @@ export class HistoriquePage implements OnInit {
             this.transactions[j].Numc = this.transactions[j].IdDes;
             }
             if (typeof (this.transactions[j].Numc) === 'object') {
-              this.transactions[j].Numc = '';
+              this.transactions[j].Numc = this.glb.PHONE;
             }
-
             this.transactions[j].label = this.serv.getLabelOperator(codeoper, sousop);
             this.transactions[j].datetrx = this.formatdate.transform(this.transactions[j].Dtrx);
             this.transactions[j].image = this.operatorImage.transform(this.glb.OperatorsImages, codeoper, sousop);

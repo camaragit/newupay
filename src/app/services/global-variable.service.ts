@@ -57,6 +57,7 @@ export class GlobalVariableService {
   minMontantMoga: number;
   database: SQLiteObject;
   enecoute = false;
+  qrcmode = false;
   prodpackageName = 'atps.africa.upaymobile';
   // tslint:disable-next-line: max-line-length
   public OperatorsImages = [{ codeoper: '0054', image: this.IMG_URL + 'emoney.png', sousop: '' }, { codeoper: '0025', image: this.IMG_URL + 'omoney.png', sousop: '' },

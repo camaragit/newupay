@@ -65,16 +65,16 @@ export class AcceuilPage implements OnInit {
     this.navCtrl.navigateForward('historique');
   }
   paiement() {
-
+    this.glbVariable.qrcmode = false;
     this.barcodeScanner
-      .scan()
-      .then(barcodeData => {
-        const infos  = barcodeData.text.split(';');
-        // alert('infos recuperees ' + JSON.stringify(infos))
-
-      })
-      .catch(err => {
-      });
-}
+        .scan()
+        .then(barcodeData => {
+          // const infos  = barcodeData.text.split(';');
+          // alert('infos recuperees ' + JSON.stringify(barcodeData));
+          this.glbVariable.qrcmode = barcodeData.cancelled ? true : false;
+        })
+        .catch(err => {
+        });
+  }
 
 }

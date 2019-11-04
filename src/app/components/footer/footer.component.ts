@@ -16,14 +16,14 @@ export class FooterComponent implements OnInit {
   barcodeScannerOptions: BarcodeScannerOptions;
   constructor(public navCtrl: NavController,
               public glb: GlobalVariableService,
-              public barcodeScanner: BarcodeScanner) { 
+              public barcodeScanner: BarcodeScanner) {
                 this.barcodeScannerOptions = {
                   showTorchButton: true,
                   showFlipCameraButton: true
                 };
-    
+
   }
- 
+
   ngOnInit() {}
 
   selection(tab) {
@@ -53,13 +53,13 @@ export class FooterComponent implements OnInit {
   }
 
   paiement() {
-
-      this.barcodeScanner
+    this.glb.qrcmode = false;
+    this.barcodeScanner
         .scan()
         .then(barcodeData => {
-          const infos  = barcodeData.text.split(';');
-          // alert('infos recuperees ' + JSON.stringify(infos)) 
-
+          // const infos  = barcodeData.text.split(';');
+          // alert('infos recuperees ' + JSON.stringify(barcodeData));
+          this.glb.qrcmode = barcodeData.cancelled ? true : false;
         })
         .catch(err => {
         });
