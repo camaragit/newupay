@@ -213,9 +213,18 @@ export class SouscriptionPage implements OnInit {
   }
 
   logScrolling() {
+    const el = document.querySelector('ion-content');
+
+    // get scroll position in px
+    console.log(el.scrollHeight, el.scrollTop);
   }
 
   logScrollEnd() {
+
+    console.log('je suis à la fin ' );
+    this.content.getScrollElement().then((data) => {
+      console.log(JSON.stringify(data));
+    });
   }
 
   ScrollToBottom() {

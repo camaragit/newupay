@@ -208,7 +208,6 @@ export class TransfertUniteValeurPage implements OnInit {
 
   }
   processWizall(message: string) {
-
     if (message.substr(0, 24) === 'Bonjour, votre code de s') {
       const otp = message.substring(message.length - 6);
       const url = 'https://testwpay.wizall.com/api/merchant/cashout/confirm/';
@@ -388,12 +387,9 @@ export class TransfertUniteValeurPage implements OnInit {
           }
         });
         return await modal.present();
-
       } else {
         this.initier();
       }
-
-
     }
     }
 
