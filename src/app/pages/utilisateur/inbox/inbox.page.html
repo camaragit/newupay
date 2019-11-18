@@ -1,0 +1,51 @@
+<app-header [headerTitle]="headerTitle"></app-header>
+<ion-content>
+  <div class="bodycontent">
+      <ion-item  lines="none" style="--background:#fff;margin-bottom: 5px; margin-top:5px; box-shadow: 0 3px 5px -1px rgba(0,0,0,.2),0 6px 10px 0 rgba(0,0,0,.14),0 1px 18px 0 rgba(0,0,0,.12);">
+          <ion-label position="floating" style="color: #2c5aa3;"><ion-icon  item-left name="search"></ion-icon>&nbsp;&nbsp;&nbsp;rechercher par date </ion-label>
+          <ion-datetime [dayNames]="jours" (ionChange)="filtrer()" [monthNames]="mois" displayFormat="DDDD DD MMMM YYYY"  doneText="Choisir" cancelText="Annuler" [(ngModel)]="filterdate"></ion-datetime>
+  </ion-item>
+      <div *ngIf="!glb.notifications || glb.notifications.length == 0" style="display: flex;justify-content: center;align-items: center;flex-direction: column;margin-top: 160px;">
+          <img src="assets/images/noresult.png" alt="" style="width: 25%">
+          <p style="font-size: 24px;color:#2c5aa3;">Pas de notifications</p>
+      </div>
+      <ion-list  style="padding: 3px !important;" *ngFor="let item of glb.notifications; let i= index;" class="accordion-list" lines="none" detail="false">
+          <ion-item tappable (click)="toggleSection(i)" [ngClass]="{'section-active': item.open}">
+              <div class="item-content" >
+                <ion-label>{{item.date}}</ion-label>
+                <div>
+                    <ion-icon slot="end" name="arrow-dropright" *ngIf="!item.open"></ion-icon>
+                    <ion-icon slot="end" name="arrow-dropdown" *ngIf="item.open"></ion-icon>
+                </div>
+              </div>
+          </ion-item>
+          <div *ngIf="item.notifications && item.open" style="padding-left: 5px; padding-right:5px;" >
+              <ion-list style="padding: 0px;"  *ngFor="let child of item.notifications; let j=index" lines="none" class="child-list">
+                  <div  style="border: 1px solid #ccc;border-top:0px;padding:8px;" class="formdiv releve" (click)="details(child)">
+                    <div style="display: flex;justify-content:space-between;width:100%;margin-bottom: 8px;">
+                        <div style="padding: 1px; font-weight:bold; font-size:13px !important;color:#ccc">
+                            <label>{{child.titre}}</label>
+                        </div>
+                        <div style="padding: 1px;color:#ccc">
+                            <label>{{child.datecomplet}}</label>
+                        </div>
+                        
+                    </div>
+
+                    <div>
+                        <div style="padding: 1px;color:#ccc;display:flex;justify-content:space-between;font-size:13px">
+                            <label style="width: calc(100% - 30px);overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{{child.message}}</label> <!-- <span style="color:#6f6f6f">{{clientForm.controls.adrsClient.value}}</span> -->
+                            <ion-icon name="open" style="color: #466eae;font-size:16px"></ion-icon>
+                        </div>
+                    </div>
+                     
+
+  
+                  </div>
+
+              </ion-list>
+            </div>
+        </ion-list>
+  </div>
+</ion-content>
+  <app-footer></app-footer>

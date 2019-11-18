@@ -12,6 +12,7 @@ import { Storage } from '@ionic/storage';
 import { OneSignal } from '@ionic-native/onesignal/ngx';
 import { PubliciteComponent } from 'src/app/components/publicite/publicite.component';
 import { MessageComponent } from 'src/app/components/message/message.component';
+import { ConfirmationComponent } from 'src/app/components/confirmation/confirmation.component';
 
 @Component({
   selector: 'app-utilisateur',
@@ -58,6 +59,7 @@ export class UtilisateurPage implements OnInit {
 
   }
   ngOnInit() {
+    this.glb.USERID = '';
     this.numbersTabs = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     const shuffleNumbers = this.shuffle(this.numbersTabs);
     this.lastnumber = shuffleNumbers[9];
@@ -72,20 +74,47 @@ export class UtilisateurPage implements OnInit {
       }
     });
     this.platform.ready().then(() => {
+      setTimeout(() => {
+        this.serv.createDataBase();
+      }, 100);
       this.oneSignal.startInit(this.glb.onesignalAppIdProd, this.glb.firebaseID);
 
-      this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.InAppAlert);
+      this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.Notification);
 
-      this.oneSignal.handleNotificationReceived().subscribe(() => {
-
+      this.oneSignal.handleNotificationReceived().subscribe((data) => {
+        const notificationData = data.payload;
+        const notification: any = {};
+        notification.titre = notificationData.title;
+        notification.message = notificationData.body;
+        notification.image = notificationData.bigPicture ? notificationData.bigPicture : '';
+        notification.data = notificationData.additionalData ? JSON.stringify(notificationData.additionalData.trx) : '';
+        console.log(JSON.stringify(notification));
+        this.glb.nombreNotif += 1;
+        this.serv.insertnotification(notification);
       });
 
       this.oneSignal.handleNotificationOpened().subscribe((data) => {
-        this.presentModal(data);
+        console.log(data);
+        if (data.notification.payload.additionalData.trx) {
+          const recu = data.notification.payload.additionalData.trx;
+          const mod = this.modalCrtl.create({
+            component: ConfirmationComponent,
+            componentProps: {
+              data: recu,
+            }
+          }).then((e) => {
+            e.present();
+            e.onDidDismiss().then(() => {
+
+            });
+          });
+        } else {
+          this.presentModal(data);
+        }
       });
-      this.oneSignal.getTags().then((data) => {
-       // alert('Tags ' + JSON.stringify(data));
-      });
+      this.oneSignal.getIds().then((data) => {
+        this.glb.USERID = data.userId;
+       });
       this.oneSignal.endInit();
     });
     this.menu.isOpen().then(data => {
@@ -186,14 +215,13 @@ export class UtilisateurPage implements OnInit {
                       this.glb.HEADER.numcompte = reponse.numcompte;
                       this.glb.HEADER.consomme = this.monmillier.transform(reponse.consome);
                       this.navCtrl.navigateRoot('utilisateur/acceuil');
-
                     }
-
                   } else {
                 if ( reponse.errorLabel === 'Code Pin incorrect !') {
                   this.serv.showError('Code Pin incorrect !');
                 } else {
-                this.serv.showError('Opération échouée');
+                  console.log(reponse.errorLabel);
+                  this.serv.showError('Opération échouée');
                 }
               }
               } else {
@@ -221,7 +249,6 @@ export class UtilisateurPage implements OnInit {
      // this.serv.showToast('Compte inexistant !');
      this.navCtrl.navigateForward('utilisateur/checkcompte');
    }
-
   }
   verssouscription() {
     this.navCtrl.navigateForward('utilisateur/souscription');

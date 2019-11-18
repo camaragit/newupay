@@ -10,7 +10,7 @@ export class PaiementPage implements OnInit {
 
   constructor(public glbVariable: GlobalVariableService) { }
   public paiementServices;
-  public headerTitle ='Paiement';
+  public headerTitle = 'Paiement';
   ngOnInit() {
   this.paiementServices  = [{image: this.glbVariable.IMG_URL + 'facture.png', libelle: 'Facture', chemin: 'paiement/facturier'},
                            {image: this.glbVariable.IMG_URL + 'marchand.png', libelle: 'Marchand', chemin: 'paiement/marchand' },

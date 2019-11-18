@@ -18,14 +18,13 @@ import { PopoverContactComponent } from '../components/popover-contact/popover-c
 import { MessageComponent } from '../components/message/message.component';
 import { PubliciteComponent } from '../components/publicite/publicite.component';
 import { TransfertUniteValeurPage } from '../pages/envoi/transfert-unite-valeur/transfert-unite-valeur.page';
-//import { TransfertUniteValeurPage } from '../pages/envoi/transfert-unite-valeur/transfert-unite-valeur.page';
-//export c options: Partial<IConfig> | (() => Partial<IConfig>);
+import { ReglecguComponent } from '../components/reglecgu/reglecgu.component';
 
 @NgModule({
   declarations: [FooterComponent, HeaderComponent, FormatcodePipe, OperatorImagePipe,
                  ContentmenuComponent, MillierPipe, FormatphonePipe,  FormatdatePipe,
                  CoupurechainePipe, PinValidationPage, ConfirmationComponent, PopoverContactComponent,
-                 MessageComponent, PubliciteComponent],
+                 MessageComponent, PubliciteComponent, ReglecguComponent, TransfertUniteValeurPage],
   imports: [
     CommonModule,
     FormsModule,
@@ -34,7 +33,7 @@ import { TransfertUniteValeurPage } from '../pages/envoi/transfert-unite-valeur/
     NgxMaskModule.forRoot(),
   ],
   entryComponents: [PinValidationPage, ConfirmationComponent,
-                    PopoverContactComponent, MessageComponent, PubliciteComponent, TransfertUniteValeurPage],
+                    PopoverContactComponent, MessageComponent, PubliciteComponent, TransfertUniteValeurPage, ReglecguComponent],
   exports: [FooterComponent,
             HeaderComponent,
             ContentmenuComponent,
@@ -50,6 +49,8 @@ import { TransfertUniteValeurPage } from '../pages/envoi/transfert-unite-valeur/
             NgxMaskModule,
             ReactiveFormsModule,
             MessageComponent,
+            ReglecguComponent,
+            TransfertUniteValeurPage,
             PubliciteComponent]
 })
 export class SharedModule { }

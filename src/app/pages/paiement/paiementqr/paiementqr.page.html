@@ -1,0 +1,79 @@
+<div id="content" class="flexcenter">
+  <div id="page">
+    <div style="background: #fff url('assets/images/bgcontent.png') no-repeat;background-size: cover;"
+      class="flex1 flexcenter">
+      <div style="width: 100%" id="contentflex1">
+        <div class="cadre">
+          <div style="align-self: start;margin-left: 0px">
+            <ion-icon (click)="versAccueil()" style="color: white;font-size: 25px;margin-left: 15px;margin-top: 10px;"
+              name="arrow-round-back"></ion-icon>
+          </div>
+          <div style="display: flex;align-items: center;width: 82%;height: calc(100% - 150px); background: #fff; margin-top: 1px;position: relative">
+            <div *ngIf="okGeneration" style="height: 88%;width: 100%;display: flex;align-items: center;justify-content: center">
+              <ngx-qrcode qrc-element-type="img" [qrc-value]="encodeData" qrc-class="aclass"></ngx-qrcode>  
+            </div>
+            <span
+              style="width: 20px;height: 20px;display: block;position: absolute;top:-13px;left:-13px;border-top:3px solid #fff;border-left: 3px solid #fff"></span>
+            <span
+              style="width: 20px;height: 20px;display: block;position: absolute;top:-13px;right:-13px;border-top:3px solid #fff;border-right: 3px solid #fff"></span>
+            <span
+              style="width: 20px;height: 20px;display: block;position: absolute;bottom:-13px;left:-13px;border-bottom:3px solid #fff;border-left: 3px solid #fff"></span>
+            <span
+              style="width: 20px;height: 20px;display: block;position: absolute;bottom:-13px;right:-13px;border-bottom:3px solid #fff;border-right: 3px solid #fff"></span>
+          </div>
+          <div
+            style="width: 87%;border: 1px solid #ccc;text-align: center;padding: 7px;font-size: 20px;margin-bottom: 2px;background: #2e6dc3;color: white">
+            {{ montant | millier }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex2 flexcenter">
+      <div id="clavier">
+        <div class="number">
+          <button (click)="presse('1')" id="num1" class="ion-activatable"><ion-ripple-effect></ion-ripple-effect>1</button>
+        </div>
+        <div class="number">
+          <button (click)="presse('2')" id="num2" class="ion-activatable"><ion-ripple-effect></ion-ripple-effect>2</button>
+        </div>
+        <div class="number">
+          <button (click)="presse('0')" id="num0" class="ion-activatable"><ion-ripple-effect></ion-ripple-effect>0</button>
+        </div>
+        <div class="number">
+          <button (click)="presse('3')" id="num3" class="ion-activatable"><ion-ripple-effect></ion-ripple-effect>3</button>
+        </div>
+        <div class="number">
+          <button (click)="presse('4')" id="num4" class="ion-activatable"><ion-ripple-effect></ion-ripple-effect>4</button>
+        </div>
+        <div class="number">
+          <button (click)="presse('5')" id="num5" class="ion-activatable"><ion-ripple-effect></ion-ripple-effect>5</button>
+        </div>
+        <div class="number">
+          <button (click)="presse('6')" id="num6" class="ion-activatable"><ion-ripple-effect></ion-ripple-effect>6</button>
+        </div>
+        <div class="number">
+          <button (click)="presse('7')" id="num7" class="ion-activatable"><ion-ripple-effect></ion-ripple-effect>7</button>
+        </div>
+        <div class="number">
+          <button (click)="presse('8')" id="num8" class="ion-activatable"><ion-ripple-effect></ion-ripple-effect>8</button>
+        </div>
+        <div class="number">
+          <button (click)="presse('9')" id="num9" class="ion-activatable"><ion-ripple-effect></ion-ripple-effect>9</button>
+        </div>
+        <div style="width: 63.3%" class="number">
+          <button (click)="presse('clear')" style="background: #dedfe1" class="ion-activatable"><ion-ripple-effect></ion-ripple-effect>EFFACER</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<ion-footer>
+  <div class="flex3 flexcenter ion-activatable">
+    <ion-ripple-effect></ion-ripple-effect>
+    <div id="touch" (click)="presse('generer')">
+      <span style="margin-top: 2px;font-size: 18px;">GENERER QRCODE</span>
+    </div>
+  </div>
+</ion-footer>

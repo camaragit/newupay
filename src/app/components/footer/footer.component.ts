@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {NavController} from '@ionic/angular';
 import { GlobalVariableService } from 'src/app/services/global-variable.service';
 import { BarcodeScanner, BarcodeScannerOptions } from '@ionic-native/barcode-scanner/ngx';
+import { QrService } from 'src/app/services/qr.service';
 
 @Component({
   selector: 'app-footer',
@@ -16,6 +17,7 @@ export class FooterComponent implements OnInit {
   barcodeScannerOptions: BarcodeScannerOptions;
   constructor(public navCtrl: NavController,
               public glb: GlobalVariableService,
+              private qrserv: QrService,
               public barcodeScanner: BarcodeScanner) {
                 this.barcodeScannerOptions = {
                   showTorchButton: true,
@@ -53,16 +55,7 @@ export class FooterComponent implements OnInit {
   }
 
   paiement() {
-    this.glb.qrcmode = false;
-    this.barcodeScanner
-        .scan()
-        .then(barcodeData => {
-          // const infos  = barcodeData.text.split(';');
-          // alert('infos recuperees ' + JSON.stringify(barcodeData));
-          this.glb.qrcmode = barcodeData.cancelled ? true : false;
-        })
-        .catch(err => {
-        });
+    this.qrserv.showChoice();
   }
 
 }

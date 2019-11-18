@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
-import { Platform, ModalController, NavParams } from '@ionic/angular';
+import { Platform, ModalController, NavParams, AlertController } from '@ionic/angular';
 import { CallNumber } from '@ionic-native/call-number/ngx';
 import { ServiceService } from 'src/app/services/service.service';
 import { MillierPipe } from 'src/app/pipes/millier.pipe';
 import { GlobalVariableService } from 'src/app/services/global-variable.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { CustomValidatorPhone } from 'src/app/components/customValidator/custom-validator';
 import { PinValidationPage } from 'src/app/pages/utilisateur/pin-validation/pin-validation.page';
 import { ConfirmationComponent } from 'src/app/components/confirmation/confirmation.component';
@@ -26,6 +26,7 @@ export class TransfertUniteValeurPage implements OnInit {
   montantreleve: any;
   public rechargeForm: FormGroup;
   ismodal;
+  showtelephonedebit = false;
   // private listeServiceDisponible = ['0005',  '0057', '0053'];
   private listeServiceDisponible = ['0022', '0054', '0005'];
   constructor(public androidPermissions: AndroidPermissions,
@@ -35,17 +36,32 @@ export class TransfertUniteValeurPage implements OnInit {
               public glb: GlobalVariableService,
               public serv: ServiceService,
               public modal: ModalController,
+              private alertController: AlertController,
               private formbuilder: FormBuilder) {
     this.rechargeForm = this.formbuilder.group({
-      telephone: ['', [Validators.required, CustomValidatorPhone]],
       montantrlv: ['', Validators.required],
-      montant: ['', Validators.required],
+      montant: [''],
       service: ['0005', Validators.required],
       oper: [''],
       frais: [''],
       sousop: ['']
     });
     this.glb.isUSSDTriggered = false;
+    this.showtelephonedebit = false;
+    this.rechargeForm.addControl('telephone', new FormControl(''));
+
+  }
+  changementSource() {
+    // this.rechargeForm.removeControl('telephone');
+    const oper = ['0022',  '0054'];
+    if (oper.includes(this.rechargeForm.controls.service.value)) {
+      this.showtelephonedebit = true;
+      this.rechargeForm.addControl('telephone', new FormControl('', Validators.required));
+    } else {
+      this.showtelephonedebit = false;
+      this.rechargeForm.removeControl('telephone');
+      this.rechargeForm.addControl('telephone', new FormControl(''));
+    }
   }
   ionViewWillEnter() {
     this.glb.enecoute = false;
@@ -143,19 +159,19 @@ export class TransfertUniteValeurPage implements OnInit {
     const message = sms.body;
     if (this.glb.isUSSDTriggered === true) {
       if (expediteur === 'ORANGEMONEY') {
-        this.processOrangeMoney(message);
+         this.processOrangeMoney(message);
       }
       if (expediteur === 'WIZALLMONEY') {
         this.processWizall(message);
       }
       if (expediteur === 'E-MONEY') {
-        this.processEmoney(message);
+        // this.processEmoney(message);
       }
       if (expediteur === 'POSTECASH') {
         this.processpostecash(message);
       }
       if (expediteur === 'FREE-MONEY') {
-        this.processTigoCash(message);
+        // this.processTigoCash(message);
       }
     }
     setTimeout(() => {
@@ -358,7 +374,7 @@ export class TransfertUniteValeurPage implements OnInit {
     }
     ).catch((err) => {
         this.serv.dismissloadin();
-        this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard ' + JSON.stringify(err));
+        this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard ');
     });
     return;
   }
@@ -462,8 +478,8 @@ export class TransfertUniteValeurPage implements OnInit {
         break;
       }
       case '0022': {
-        this.lancementussd(service);
-        break;
+         this.initieroperation(service);
+         break;
       }
       case '0005': {
 
@@ -471,7 +487,7 @@ export class TransfertUniteValeurPage implements OnInit {
         break;
       }
       case '0054': {
-        this.lancementussd(service);
+        this.initieroperation(service);
         break;
       }
       default: {
@@ -481,38 +497,65 @@ export class TransfertUniteValeurPage implements OnInit {
     }
 
   }
-  lancementussd(service: string) {
+  initieroperation(service: string) {
     this.serv.afficheloadingWithExit();
-    setTimeout(() => {
-      const reference = this.serv.generateUniqueId();
-      // tslint:disable-next-line: max-line-length
-      const mnt = this.rechargeForm.controls.montantrlv.value;
-      const commandetigo = '#150*4*6*' + this.glb.ATPS_TIGO_IDMERCHAND + '*' + reference + '*' + mnt + '#';
-      const commandeOrange = '#144#5*' + this.glb.ATPS_OM_IDMERCHAND + '*' + mnt + '#';
-      const commandeEmoney = '#444*3*1*' + this.glb.ATPS_EM_IDMERCHAND + '*' + mnt + '#';
-      /* const commandetigo   = '#150*4*6*' + this.glb.ATPS_TIGO_IDMERCHAND + '*' + reference + '*1#';
-         const commandeOrange = '#144#5*' + this.glb.ATPS_OM_IDMERCHAND + '*10#';
-         const commandeEmoney = '#444*3*1*' + this.glb.ATPS_EM_IDMERCHAND + '*100#';*/
-      let commande = '';
-      if (service === '0022') {
-        commande = commandetigo;
+    const url =  this.glb.RESTURL + 'recharge/moga/init';
+    const params: any = {};
+    params.idSession = this.glb.IDSESS;
+    params.telephone = '221' + this.rechargeForm.controls.telephone.value + '';
+    params.numeroCompte = this.glb.PHONE;
+    params.operateur = service;
+    params.montant = this.rechargeForm.controls.montantrlv.value;
+    params.sousOperateur = '';
+    params.pays = '';
+    params.mode = '';
+    console.log(params);
+    this.serv.post(url, params).then((data => {
+      const rep: any = JSON.parse(data.data);
+      console.log('reponse ' + JSON.stringify(rep));
+      if (rep.codeRetour === '0') {
+        this.serv.dismissloadin();
+        // this.serv.showError('Merci de poursuivre le processus et ensuite patienter un instant ...');
+        this.confirmation(service);
+      } else {
+        this.serv.showError(rep.messageRetour);
       }
-      if (service === '0005') {
-        commande = commandeOrange;
-      }
-      if (service === '0054') {
-        commande = commandeEmoney;
-      }
-      // alert(commande);
-      this.callNumber.callNumber(commande, true)
-        .then(res => {
-          this.glb.isUSSDTriggered = true;
-        })
-        .catch(err => {
-          this.serv.dismissloadin();
-        });
-    }, 200);
+    })).catch(err => {
+      this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard ');
+    });
+
   }
+lancementussd(service) {
+ // setTimeout(() => {
+    const reference = this.serv.generateUniqueId();
+    // tslint:disable-next-line: max-line-length
+    const mnt = this.rechargeForm.controls.montantrlv.value;
+    const commandetigo = '#150*4*6*' + this.glb.ATPS_TIGO_IDMERCHAND + '*' + reference + '*' + mnt + '#';
+    const commandeOrange = '#144#5*' + this.glb.ATPS_OM_IDMERCHAND + '*' + mnt + '#';
+    const commandeEmoney = '#444*3*1*' + this.glb.ATPS_EM_IDMERCHAND + '*' + mnt + '#';
+    /* const commandetigo   = '#150*4*6*' + this.glb.ATPS_TIGO_IDMERCHAND + '*' + reference + '*1#';
+       const commandeOrange = '#144#5*' + this.glb.ATPS_OM_IDMERCHAND + '*10#';
+       const commandeEmoney = '#444*3*1*' + this.glb.ATPS_EM_IDMERCHAND + '*100#';*/
+    let commande = '';
+    if (service === '0022') {
+      commande = commandetigo;
+    }
+    if (service === '0005') {
+      commande = commandeOrange;
+    }
+    if (service === '0054') {
+      commande = commandeEmoney;
+    }
+    // alert(commande);
+    this.callNumber.callNumber(commande, true)
+      .then(res => {
+        this.glb.isUSSDTriggered = true;
+      })
+      .catch(err => {
+        this.serv.dismissloadin();
+      });
+ // }, 200);
+}
 
   initOperation(service: string) {
     const transfert = { montant: this.rechargeForm.controls.montantrlv.value, telSource: this.glb.PHONE, opersource: service };
@@ -554,4 +597,28 @@ export class TransfertUniteValeurPage implements OnInit {
     });
   }
 
+
+  async confirmation(service) {
+    const alert = await this.alertController.create({
+      header: 'UPay Africa',
+      // subHeader: 'Subtitle',
+      message: 'Opération initiée avec succès\r.Merci de poursuivre et patienter un cours instant',
+      cssClass: 'alertSucces',
+      buttons: [{
+        text: 'Annuler',
+        role: 'cancel',
+        cssClass: 'secondary',
+        handler: () => {
+          this.reinit();
+        }
+      }, {
+        text: 'continuer',
+        handler: () => {
+          this.lancementussd(service);
+        }
+      }]
+    });
+
+    await alert.present();
+  }
 }

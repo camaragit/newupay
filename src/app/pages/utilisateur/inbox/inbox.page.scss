@@ -1,0 +1,21 @@
+.item-content{
+    background-color:#ffffff;
+    width:100%;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+}
+
+ion-item{
+    --inner-padding-end: 5px !important;
+    --padding-start:5px !important;
+}
+
+.formdiv {
+    padding: 7px 7px;
+    margin-bottom: 0px !important;
+    background: #fff;
+    color: #000;
+}

@@ -1,5 +1,5 @@
 <div style="padding: 15px;margin-bottom:40px">
-  <div class="formdiv releve">
+  <div class="formdiv releve" (press)="pasteText('ref')">
       <form [formGroup]="Encdata" class="formulaire typeform2" >
           <label>{{datareleve.label}}</label>
           <input type="tel" formControlName="reference" placeholder="Entrer le numéro ici"/>
@@ -24,7 +24,7 @@
     </div>
   </div>
   <form *ngIf="datareleve.codeoper=='0016' && !hastel" [formGroup]="infosClient"> 
-      <div class="formdiv" style="margin-top: 10px;" [style.border-color]="infosClient.controls.telephone.errors && infosClient.controls.telephone.touched ? 'red' : '#578cc9'" >
+      <div class="formdiv" (press)="pasteText('tel')" style="margin-top: 10px;" [style.border-color]="infosClient.controls.telephone.errors && infosClient.controls.telephone.touched ? 'red' : '#578cc9'" >
       <label>Saisir Téléphone * </label>
       <input type="tel" prefix="+221 " mask="00-000-00-00" formControlName="telephone" placeholder="Entrer le téléphone ici"/>
     </div>
@@ -49,10 +49,9 @@
         <div></div>
       </div>
 
-      <div class="formdiv " [style.border-color]="infosClient.controls.telephone.errors && infosClient.controls.telephone.touched ? 'red' : '#578cc9'">
+      <div (press)="pasteText('tel')" class="formdiv" [style.border-color]="infosClient.controls.telephone.errors && infosClient.controls.telephone.touched ? 'red' : '#578cc9'">
         <label>Saisir Téléphone * </label>
         <input type="tel" prefix="+221 " mask="00-000-00-00" formControlName="telephone" placeholder="Entrer le téléphone ici"/>
-        
       </div>
     </div>
   </form>

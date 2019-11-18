@@ -2,7 +2,7 @@
   <form [formGroup]="rechargeForm">
     <div class="formdiv releve">
       <label>Renseigner le montant souhaité</label>
-      <input type="number" (input)="resetMontant()" formControlName="montantrlv" placeholder="Saisir le montant ici" />
+      <input type="number" (input)="resetMontant()" style="color: black; width: 250px !important;" formControlName="montantrlv" placeholder="Saisir le montant ici" />
       <div></div>
     </div>
 
@@ -18,17 +18,17 @@
         </div>
 
       </div>
-      <div *ngIf="!israpido && cashindata.codeOper!='0074'" style="margin-top: 10px;border-left: 5px solid #074a94;" class="formdiv releve">
+      <div *ngIf="!israpido && cashindata.codeOper!='0074'" (click)="pasteText()" style="margin-top: 10px;border-left: 5px solid #074a94;" class="formdiv releve">
         <div (click)="listecontacts()" style="width:30px;position: absolute;right: 0;" class="light" id="newcontact">
           <span><img src="assets/images/new_contact.png" style="width:22px" /></span>
         </div>
         <label>Renseigner le numéro du bénéficiaire</label>
-        <input type="tel" prefix="+221 " mask="00-000-00-00" formControlName="telephone" placeholder="Entrer le numéro ici" />
+        <input type="tel" prefix="+221 " (click)="pasteText()" mask="00-000-00-00" formControlName="telephone" placeholder="Entrer le numéro ici" />
         <div></div>
       </div>
-      <div *ngIf="israpido && cashindata.codeOper!='0074'" style="margin-top: 10px;border-left: 5px solid #074a94;" class="formdiv releve">
+      <div *ngIf="israpido && cashindata.codeOper!='0074'" (click)="pasteText()" style="margin-top: 10px;border-left: 5px solid #074a94;" class="formdiv releve">
           <label>Renseigner le numéro de Badge</label>
-          <input type="number" formControlName="telephone" placeholder="Entrer le numéro ici"/>
+          <input type="number" formControlName="telephone"  placeholder="Entrer le numéro ici"/>
           <div></div>
         </div>
       <ion-label *ngIf="showName">{{displayName}}</ion-label>

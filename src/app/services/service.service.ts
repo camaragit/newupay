@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Toast } from '@ionic-native/toast/ngx';
-import { LoadingController, AlertController, NavController, Platform, ModalController } from '@ionic/angular';
+import { LoadingController, AlertController, NavController, Platform, ModalController, ActionSheetController } from '@ionic/angular';
 import { HTTP } from '@ionic-native/http/ngx';
 import { MillierPipe } from '../pipes/millier.pipe';
 import { GlobalVariableService } from './global-variable.service';
@@ -10,6 +10,10 @@ import { ConfirmationComponent } from '../components/confirmation/confirmation.c
 import { FormControl, AbstractControl } from '@angular/forms';
 import { TransfertUniteValeurPage } from '../pages/envoi/transfert-unite-valeur/transfert-unite-valeur.page';
 import * as CryptoJS from 'crypto-js';
+import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
+import { PinValidationPage } from '../pages/utilisateur/pin-validation/pin-validation.page';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -23,6 +27,7 @@ export class ServiceService {
               private localNotifications: LocalNotifications,
               private platform: Platform,
               public modal: ModalController,
+              private sqlitePorter: SQLitePorter,
               public millier: MillierPipe,
               public navCtrl: NavController) {
     this.platform.ready().then(() => {
@@ -37,7 +42,6 @@ export class ServiceService {
           e.onDidDismiss().then(() => {
             // this.getrecent();
           });
-
         });
       });
 
@@ -47,41 +51,59 @@ export class ServiceService {
 
     return CryptoJS.SHA512(message) + '';
   }
+  crytagesymetrique(message: string, cle: string) {
+    return CryptoJS.AES.encrypt(message, cle);
+  }
+  decrytagesymetrique(message: string, cle: string) {
+    const bytes  = CryptoJS.AES.decrypt(message, cle);
+    return bytes.toString(CryptoJS.enc.Utf8);
+  }
   showToast(message) {
     this.toast.showLongCenter(message).subscribe(value => {
       console.log(value);
     });
   }
+  showLongToast(message) {
+    this.toast.show(message, '50000', 'center').subscribe(
+      toast => {
+        console.log(toast);
+      }
+    );
+  }
   createDataBase() {
-    this.getDataBase()
-      .then((db: SQLiteObject) => {
-        this.glb.database = db;
+ /*    this.getDataBase()
+      .then((db: SQLiteObject) => { */
+        // this.glb.database = db;
+        // this.getDataBase();
         let sql = 'create table if not exists recents(numcompte TEXT,codeoperateur TEXT, sousoperateur TEXT,';
         sql += 'reference TEXT , nomclient TEXT, datemisajour TEXT, montant TEXT)';
         // sql = 'drop table recents';
-        db.executeSql(sql, [])
+        this.glb.LITEDB.executeSql(sql, [])
           .then(() => {
             // sql = 'drop table favoris';
             sql = ' create table if not exists favoris(numcompte TEXT,codeoperateur TEXT, sousoperateur TEXT';
             sql += ',chemin TEXT,image TEXT, nombretrx INTEGER,datemisajour TEXT) ';
-            db.executeSql(sql, []).then(() => {
+            this.glb.LITEDB.executeSql(sql, []).then(() => {
               sql = 'create table if not exists wallet (numcompte TEXT,codeoperateur TEXT,';
               sql += ' image TEXT, chemin TEXT, telephone TEXT, libelle TEXT)';
-              db.executeSql(sql, []).then(() => {});
+              this.glb.LITEDB.executeSql(sql, []).then(() => {
+                sql = 'create table if not exists notification(titre, message,date,image,data,datecomplet)';
+                this.glb.LITEDB.executeSql(sql, []).then(() => {});
+              });
             });
           })
           .catch(e => console.log(e));
 
-      })
-      .catch(e => console.log(e));
+    /*   })
+      .catch(e => console.log(e)); */
   }
   insert(clientData: any) {
-    this.getDataBase()
-      .then((db: SQLiteObject) => {
+/*     this.getDataBase()
+      .then((db: SQLiteObject) => { */
         let sql = ' select * from recents where codeoperateur=? and sousoperateur =? and reference=? and numcompte=?';
         // const sql = 'INSERT INTO recents VALUES(?,?,?,?)';
         let values = [clientData.codeOper, clientData.sousOper, clientData.reference, this.glb.NUMCOMPTE];
-        db.executeSql(sql, values)
+        this.glb.LITEDB.executeSql(sql, values)
           .then((data) => {
             let dateupdate: any = new Date();
             dateupdate = dateupdate.getTime();
@@ -101,23 +123,73 @@ export class ServiceService {
               clientData.reference, clientData.nomclient,
                 dateupdate, clientData.montant];
             }
-            db.executeSql(sql, values)
+            this.glb.LITEDB.executeSql(sql, values)
               .then((res) => { })
               .catch(e => console.log(e));
           })
           .catch(e => {
             { }
           });
-      })
-      .catch(e => console.log(e));
+   /*    })
+      .catch(e => console.log(e)); */
+  }
+  insertnotification(notification: any) {
+    const recupdate = this.getAtpsFormatDate();
+    const sql = 'INSERT INTO notification VALUES(?,?,?,?,?,?)';
+    const values = [notification.titre, notification.message, recupdate.simple,
+    notification.image, notification.data, recupdate.complet];
+    this.glb.LITEDB.executeSql(sql, values)
+              .then((res) => {console.log(res); })
+              .catch(e => console.log(e)); }
+  getAllnotification(paramDate: any = '') {
+    paramDate += '';
+    this.glb.notifications = [];
+    let sql = 'select titre,image,message,date,data,datecomplet from notification where date like ';
+    sql += '\'%' + paramDate + '%\' order by date desc';
+    console.log(sql);
+    const values = [];
+    this.glb.LITEDB.executeSql(sql, values)
+        .then((data) => {
+          if (data.rows.length > 0) {
+            const notifpardate: any = [];
+            for (let i = 0; i < data.rows.length; i++) {
+              notifpardate.push(data.rows.item(i));
+            }
+            const result = notifpardate.reduce((r, a) => {
+              r[a.date] = r[a.date] || [];
+              r[a.date].push(a);
+              return r;
+          }, Object.create(null));
+            const key = Object.keys(result);
+            const retour: any = [];
+            for (let j = 0; j < key.length; j++) {
+              const jour = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+              retour[j] = {};
+              const cle = key[j];
+              console.log(cle);
+              const dateformat = cle.substr(0, 4) + '-' + cle.substr(4, 2) + '-' + cle.substr(6, 2);
+              const df = new Date(dateformat);
+              retour[j].date = jour[df.getDay()] + ' ' + cle.substr(6, 2) + '/' + cle.substr(4, 2) + '/' + cle.substr(0, 4);
+              retour[j].notifications = result[cle];
+              retour[j].notifications.map(item => {
+                const datecomplet = item.datecomplet.substring(item.datecomplet.length - 6);
+                item.datecomplet = datecomplet.substr(0, 2) + 'h:' + datecomplet.substr(2, 2);
+              });
+              retour[j].notifications = retour[j].notifications.reverse();
+          }
+            this.glb.notifications = retour.reverse();
+            this.glb.notifications[0].open = true;
+           // alert(JSON.stringify(this.glb.notifications));
+          }
+          });
   }
 
   insertWallet(wallet: any) {
-    this.getDataBase()
-      .then((db: SQLiteObject) => {
+/*     this.getDataBase()
+      .then((db: SQLiteObject) => { */
         let sql = ' select * from wallet where codeoperateur=? and numcompte=?';
         let values = [wallet.codeoperateur, this.glb.NUMCOMPTE];
-        db.executeSql(sql, values)
+        this.glb.LITEDB.executeSql(sql, values)
           .then((data) => {
             let dateupdate: any = new Date();
             dateupdate = dateupdate.getTime();
@@ -133,7 +205,7 @@ export class ServiceService {
               sql = 'INSERT INTO wallet VALUES(?,?,?,?,?,?)';
               values = [this.glb.NUMCOMPTE, wallet.codeoperateur, wallet.image, wallet.chemin, wallet.telephone, wallet.libelle];
             }
-            db.executeSql(sql, values)
+            this.glb.LITEDB.executeSql(sql, values)
               .then((res) => {
                 this.showToast('Wallet Ajouté avec succès! ');
                 this.navCtrl.navigateBack('compte/listewallet');
@@ -143,16 +215,16 @@ export class ServiceService {
           .catch(e => {
             { }
           });
-      })
-      .catch(e => console.log(e));
+/*       })
+      .catch(e => console.log(e)); */
 
   }
   insertFavoris(operateur: any) {
-    this.getDataBase()
-      .then((db: SQLiteObject) => {
-        let sql = ' select * from favoris where codeoperateur=? and sousoperateur =? and numcompte=?';
-        let values = [operateur.codeOper, operateur.sousOper, this.glb.NUMCOMPTE];
-        db.executeSql(sql, values)
+  //  this.getDataBase();
+/*       .then((db: SQLiteObject) => { */
+    let sql = ' select * from favoris where codeoperateur=? and sousoperateur =? and numcompte=?';
+    let values = [operateur.codeOper, operateur.sousOper, this.glb.NUMCOMPTE];
+    this.glb.LITEDB.executeSql(sql, values)
           .then((data) => {
             let dateupdate: any = new Date();
             dateupdate = dateupdate.getTime();
@@ -168,69 +240,71 @@ export class ServiceService {
               sql = 'INSERT INTO favoris VALUES(?,?,?,?,?,?,?)';
               values = [this.glb.NUMCOMPTE, operateur.codeOper, operateur.sousOper, operateur.chemin, operateur.image, 1, dateupdate];
             }
-            db.executeSql(sql, values)
+            this.glb.LITEDB.executeSql(sql, values)
               .then((res) => { })
               .catch(e => { });
           })
           .catch(e => {
             { }
           });
-      })
-      .catch(e => console.log(e));
+/*       })
+      .catch(e => console.log(e)); */
 
   }
   getrecent() {
     const recents: any = [];
-    this.getDataBase()
-      .then((db: SQLiteObject) => {
-        const sql = 'select * from recents where codeoperateur=? and sousoperateur =? and numcompte=?';
-        const values = ['0005', '0005', '221775067661'];
-        db.executeSql(sql, values)
+/*     this.getDataBase()
+      .then((db: SQLiteObject) => { */
+    const sql = 'select * from recents where codeoperateur=? and sousoperateur =? and numcompte=?';
+    const values = ['0005', '0005', '221775067661'];
+    this.glb.LITEDB.executeSql(sql, values)
           .then((data) => {
             for (let i = 0; i < data.rows.length; i++) {
               recents.push((data.rows.item(i)));
             }
           })
           .catch(e => console.log(e));
-      })
-      .catch(e => console.log(e));
+/*       })
+      .catch(e => console.log(e)); */
 
     return recents;
   }
   getdata() {
-    this.getDataBase()
-      .then((db: SQLiteObject) => {
-        const sql = 'select * from recents';
-        const values = [];
-        db.executeSql(sql, values)
+/*     this.getDataBase()
+      .then((db: SQLiteObject) => { */
+    const sql = 'select * from recents';
+    const values = [];
+    this.glb.LITEDB.executeSql(sql, values)
           .then((data) => {
-            for (let i = 0; i < data.rows.length; i++) {
+/*             for (let i = 0; i < data.rows.length; i++) {
              // alert('data ' + JSON.stringify(data.rows.item(i)));
-            }
+            } */
           })
           .catch(e => console.log(e));
-      })
-      .catch(e => console.log(e));
+/*       })
+      .catch(e => console.log(e)); */
 
   }
+  export() {
+    this.sqlitePorter.exportDbToSql(this.glb.LITEDB).then((db) => {alert(JSON.stringify(db)); });
+  }
   deletealldata() {
-    this.getDataBase()
-      .then((db: SQLiteObject) => {
+    const sql = 'drop table wallet ';
+    const values = [];
+
         // const sql = 'delete from recents where reference =\'108000008611\' ';
         // const sql = 'update recents set sousoperateur=\'0002\' ';
-        const sql = 'drop table wallet ';
-        const values = [];
-        db.executeSql(sql, values)
+
+    this.glb.LITEDB.executeSql(sql, values)
           .then(() => { })
           .catch(e => console.log(e));
-      })
-      .catch(e => console.log(e));
+
   }
   getDataBase() {
     return this.sqlite.create({
       name: 'recents.db',
       location: 'default'
-    });
+    }).then((db: SQLiteObject) => {this.glb.LITEDB = db; });
   }
   CheckIfSequence(valeur: any) {
     if (valeur !== null) {
@@ -372,6 +446,7 @@ export class ServiceService {
       }
     });
   }
+
   getLabelOperator(codeOper: string, codeSousop: string) {
     let label = 'Téléphone';
     if (codeOper === '0016' || codeOper === '0027') {
@@ -412,6 +487,20 @@ export class ServiceService {
     const minute = date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes();
     return jour + '/' + mois + '/' + annee + ' à ' + heure + 'h:' + minute;
   }
+  getAtpsFormatDate() {
+    const date = new Date();
+    const jour = date.getDate() >= 10 ? date.getDate() : '0' + date.getDate();
+    const mois = date.getMonth() + 1 >= 10 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1);
+    const annee = date.getFullYear();
+    const heure = date.getHours() >= 10 ? date.getHours() : '0' + date.getHours();
+    const minute = date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes();
+    const seconde = date.getSeconds() >= 10 ? date.getSeconds() : '0' + date.getSeconds();
+    const retourdate: any = {};
+    retourdate.simple  = annee + '' + mois + '' + jour ;
+    retourdate.complet = retourdate.simple + '' + heure + '' + minute + '' + seconde;
+    return retourdate ;
+
+  }
   getplafond() {
     const parametre = { idPartn: this.glb.IDPART, idTerm: this.glb.IDTERM, session: this.glb.IDSESS };
     return this.posts('plafond/solde.php', parametre, {});
@@ -440,7 +529,7 @@ export class ServiceService {
     if (parametres.recharge.oper === '0073') {
       parametres.recharge.telephone = '221' + parametres.recharge.telephone;
     }
-    // alert(JSON.stringify(parametres));
+
     this.posts('recharge/' + file + '.php', parametres, {}).then(data => {
       this.dismissloadin();
       const reponse = JSON.parse(data.data);
@@ -455,6 +544,7 @@ export class ServiceService {
           if (parametres.recharge.oper === '0074') {
             this.glb.recu.telRech = reponse.codeTransfert;
           }
+
           this.glb.showRecu = true;
           this.glb.HEADER.montant = this.monmillier.transform(reponse.mntPlfap);
           this.glb.dateUpdate = this.getCurrentDate();
@@ -483,21 +573,31 @@ export class ServiceService {
     const retour = numeroautorisé.indexOf(telephone.substring(0, 2));
     return retour === -1;
   }
-  notifier(trx) {
-/*     this.localNotifications.hasPermission().then(() => {
-      try {
-        this.localNotifications.schedule({
-          id: 1,
-          text: 'Transaction effecutée avec succés, cliquer pour voir les details',
-           sound: 'file://sound.mp3',
-          data: { recu: trx }
-        });
-      } catch (error) {
-        alert('error schedule ' + JSON.stringify(error));
-      }
-    }).catch(err => {
-      alert('Erreur notif ' + JSON.stringify(err));
-    }); */
+  notifier(trx: any) {
+    const header = this.glb.ONESIGNALHEADER;
+    // tslint:disable-next-line: object-literal-key-quotes
+    const params = { app_id: this.glb.onesignalAppIdProd, headings: {en: trx.operation},
+                    filters: [{field: 'tag', relation: '=', key: 'telephone', value: this.glb.PHONE}],
+                    contents: {en : 'Bonjour {{prenom}} {{nom}}, votre transaction effectuée avec succés, cliquer pour voir les details'},
+                    data: {trx} };
+    this.post(this.glb.URLONESIGNALAPI, params, header).then((data: { data: string; }) => {
+       })
+      .catch((err: { status: number; }) => {
+      });
+  }
+  notifierben(parametres) {
+    const montant = this.millier.transform(parametres.montant + '');
+    const telephone = parametres.telephone.substring(3);
+    const header = this.glb.ONESIGNALHEADER;
+    const params = { app_id: this.glb.onesignalAppIdProd, headings: {en: 'UPAY AFRICA'},
+                    filters: [{field: 'tag', relation: '=', key: 'telephone', value: telephone}],
+                    contents: {en : 'Bonjour {{prenom}} {{nom}}, ' + this.glb.PRENOM + ' ' + this.glb.NOM +
+                    ' vient de transferer ' + montant + ' xof dans votre compte UPay'},
+                     };
+    this.post(this.glb.URLONESIGNALAPI, params, header).then((data: { data: string; }) => {
+       })
+      .catch((err: { status: number; }) => {
+      });
   }
 
   getPlafond() {
@@ -573,7 +673,9 @@ export class ServiceService {
       // console.log(headers);
       // console.log(url);
       // console.log(body);
+      if (!body.numeroCompte) {
       body.numerocompte = this.glb.HEADER.agence;
+      }
       this.http.setDataSerializer('json');
       this.http.setSSLCertMode('nocheck');
       this.http.setRequestTimeout(90);
@@ -613,6 +715,5 @@ export class ServiceService {
 
     return diff;
   }
-
 
 }

@@ -848,3 +848,28 @@ background-size: cover;
   justify-content: center;
   align-content: center;
 }
+#notification-button {            
+  position: relative;
+  width: 42px;
+  top:1px;
+  right: 1px;
+  overflow: visible!important;
+}
+#notifications-badge {
+  background-color: red;
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  border-radius: 100%;
+}
+#cart-btn {
+  position: relative;
+}
+#cart-badge {
+  position: relative;
+  top: -12px;
+  right: 8px;
+}
+.ion-activatable{
+  position: relative;
+}

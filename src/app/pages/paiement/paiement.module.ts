@@ -6,6 +6,8 @@ import { MarchandPage } from './marchand/marchand.page';
 import { AssurancePage } from './assurance/assurance.page';
 import { CreditPage } from './credit/credit.page';
 import { AbonnementPage } from './abonnement/abonnement.page';
+import { PaiementqrPage } from './paiementqr/paiementqr.page';
+import { NgxQRCodeModule } from 'ngx-qrcode2';
 
 const routes: Routes = [
   {
@@ -15,6 +17,10 @@ const routes: Routes = [
 {
   path: 'facturier',
   loadChildren: './facturier/facturier.module#FacturierPageModule'
+},
+{
+  path: 'qr',
+  component: PaiementqrPage
 },
 {
   path: 'marchand',
@@ -40,8 +46,9 @@ const routes: Routes = [
 @NgModule({
   imports: [
     SharedModule,
+    NgxQRCodeModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [PaiementPage, MarchandPage, AbonnementPage, CreditPage, AssurancePage]
+  declarations: [PaiementPage, MarchandPage, AbonnementPage, CreditPage, AssurancePage, PaiementqrPage]
 })
 export class PaiementPageModule {}

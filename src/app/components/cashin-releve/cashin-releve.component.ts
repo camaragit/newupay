@@ -12,6 +12,7 @@ import { PopoverContactComponent } from '../popover-contact/popover-contact.comp
 import { SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { Storage } from '@ionic/storage';
 import { CheckService } from 'src/app/services/check.service';
+import { Clipboard } from '@ionic-native/clipboard/ngx';
 
 @Component({
   selector: 'cashin-releve',
@@ -39,6 +40,7 @@ export class CashinReleveComponent implements OnInit {
               public popover: PopoverController,
               public storage: Storage,
               private check: CheckService,
+              private clipboard: Clipboard,
               public monmillier: MillierPipe) {
     this.rechargeForm = this.formbuilder.group({
       telephone: ['', [Validators.required, CustomValidatorPhone]],
@@ -94,17 +96,12 @@ export class CashinReleveComponent implements OnInit {
             } else {
               this.serv.showError('Impossible de recuperer votre numéro telephone');
             }
-
           });
-
         }
-
       } else { this.serv.showError('Opération échouée'); }
       } else {
         this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
-
       }
-
     }).catch(err => {
         this.serv.dismissloadin();
         this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
@@ -259,20 +256,20 @@ export class CashinReleveComponent implements OnInit {
   }
   getrecent() {
     this.recentsContacts = [];
-    this.serv.getDataBase()
-    .then((db: SQLiteObject) => {
-      const sql = 'select * from recents where codeoperateur=? and sousoperateur =? and numcompte=? order by datemisajour desc limit 5';
-      const values = [this.cashindata.codeOper, this.cashindata.sousOper, this.glb.NUMCOMPTE];
-      db.executeSql(sql, values)
+/*     this.serv.getDataBase()
+    .then((db: SQLiteObject) => { */
+    const sql = 'select * from recents where codeoperateur=? and sousoperateur =? and numcompte=? order by datemisajour desc limit 5';
+    const values = [this.cashindata.codeOper, this.cashindata.sousOper, this.glb.NUMCOMPTE];
+    this.glb.LITEDB.executeSql(sql, values)
         .then((data) => {
           for (let i = 0; i < data.rows.length; i++) {
             this.recentsContacts.push((data.rows.item(i)));
           }
           })
         .catch(e => {});
-    })
+/*     })
     .catch(e => {});
-
+ */
   }
 
 
@@ -347,5 +344,16 @@ export class CashinReleveComponent implements OnInit {
       return '';
     }
     return phone;
+  }
+  pasteText(){
+    this.clipboard.paste().then(
+      (resolve: string) => {
+         this.rechargeForm.controls.telephone.setValue(resolve);
+         console.log(resolve);
+       },
+       (reject: string) => {
+         console.error('Error: ' + reject);
+       }
+     );
   }
 }

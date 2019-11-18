@@ -78,7 +78,7 @@ const routes: Routes = [
                  TigoCashPage, OrangeMoneyPage, RapidoPage,
                  IziPage, SeddoPage, EmoneyPage, YakalmaPage,
                  RechargeComponent, CashinReleveComponent,
-                 UpaywalletPage, TransfertUniteValeurPage
+                 UpaywalletPage
                 ]
 })
 export class EnvoiPageModule {}

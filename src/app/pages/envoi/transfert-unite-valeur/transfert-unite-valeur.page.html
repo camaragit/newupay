@@ -1,5 +1,4 @@
-
-  <app-header [headerTitle]="headerTitle"></app-header>
+<app-header [headerTitle]="headerTitle"></app-header>
 <ion-content>
         <div style="padding: 15px">
                 <form [formGroup]="rechargeForm">
@@ -7,24 +6,34 @@
                         <div class="formdiv releve" style="margin-bottom: 10px">
                                 <label>Choisir le compte à débiter</label>
 
-               <ion-select formControlName="service" style="--padding-start:0px; --padding-bottom: 0px" interface="popover">
-              <ion-select-option value="0005">Orange Money</ion-select-option>
-              <ion-select-option value="0022">Free-Money</ion-select-option>
-              <ion-select-option value="0057">Wizall</ion-select-option>
-              <ion-select-option value="0054">E-Money</ion-select-option>
-               <ion-select-option value="0053">PosteCash</ion-select-option>
-            </ion-select>
+                                <ion-select (ionChange)='changementSource()' formControlName="service"
+                                        style="--padding-start:0px; --padding-bottom: 0px" interface="popover">
+                                        <ion-select-option value="0005">Orange Money</ion-select-option>
+                                        <ion-select-option value="0022">Free-Money</ion-select-option>
+                                        <ion-select-option value="0057">Wizall</ion-select-option>
+                                        <ion-select-option value="0054">E-Money</ion-select-option>
+                                        <ion-select-option value="0053">PosteCash</ion-select-option>
+                                </ion-select>
                                 <div></div>
+                        </div>
+                        <div class="formdiv releve" *ngIf="showtelephonedebit">
+                                <label>Renseigner le téléphone du compte à débiter</label>
+                                <input type="tel" prefix="+221 " mask="00-000-00-00" formControlName="telephone"
+                                        placeholder="Entrer le numéro de téléphone" />
                         </div>
 
                         <div class="formdiv releve">
                                 <label>Renseigner le montant</label>
                                 <input formControlName="montantrlv" type="number" placeholder="Saisir le montant ici" />
-                                
+
                         </div>
-                          <div class="flex2 flexcenter" id="btncontrol">
-            <button style="width: 100%;border-radius: 5px;" [style.background]="rechargeForm.controls['montantrlv'].value<=0 ? '#CFD8DC' : '#074A94'" (click)="showPin()" [disabled]="rechargeForm.controls['montantrlv'].value<=0" id="btnsvt"  class="btnbleu" >Transferer</button>
-          </div>
+                 
+                        <div class="flex2 flexcenter" id="btncontrol">
+                                <button style="width: 100%;border-radius: 5px;"
+                                        [style.background]="rechargeForm.invalid ? '#CFD8DC' : '#074A94'"
+                                        (click)="showPin()" [disabled]="rechargeForm.invalid" id="btnsvt"
+                                        class="btnbleu">Transferer</button>
+                        </div>
 
 
                 </form>

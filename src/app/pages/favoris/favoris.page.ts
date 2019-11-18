@@ -25,11 +25,11 @@ export class FavorisPage implements OnInit {
   getfavoris() {
     this.showfavoris = false;
     this.favoris = [];
-    this.serv.getDataBase()
-    .then((db: SQLiteObject) => {
-      const sql = 'select * from favoris where numcompte=? order by nombretrx desc ';
-      const values = [this.glb.NUMCOMPTE];
-      db.executeSql(sql, values)
+/*     this.serv.getDataBase()
+    .then((db: SQLiteObject) => { */
+    const sql = 'select * from favoris where numcompte=? order by nombretrx desc ';
+    const values = [this.glb.NUMCOMPTE];
+    this.glb.LITEDB.executeSql(sql, values)
         .then((data) => {
           if (data.rows.length > 0) {
             this.showfavoris = true;
@@ -43,8 +43,8 @@ export class FavorisPage implements OnInit {
 
           })
         .catch(e => {});
-    })
-    .catch(e => {});
+/*     })
+    .catch(e => {}); */
 
   }
 

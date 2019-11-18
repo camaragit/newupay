@@ -35,6 +35,8 @@ export class GlobalVariableService {
   public READCODEOTP = '';
   public PRENOM = 'Dame';
   public NOM = 'Camara';
+  PASSWORD = 'B2CUP@y@frica#5!2030';
+  LITEDB: SQLiteObject;
   public NUMPIECE = '123456789';
   public active1 = false;
   public active2 = false;
@@ -44,13 +46,20 @@ export class GlobalVariableService {
   public ATPS_OM_IDMERCHAND = 348747;
   public ATPS_EM_IDMERCHAND = 100044;
   PHONE: any = '775067661';
+  USERID: any = '';
+  nombreNotif = 0;
+  ONESIGNALHEADER: any = { Authorization: 'Basic ZTc5M2U1MzUtNGVlZC00NjdjLTgwNjUtZjE1ZjkyYWJmZjY4'};
   onesignalAppIdProd = '04ec581b-a5f2-4e40-ac76-8c7c02fda21c';
   onesignalAppIdTest = '04ec581b-a5f2-4e40-ac76-8c7c02fda21c';
   firebaseID = '350026042244';
   NUMCOMPTE: any = '';
   isUSSDTriggered = false;
   showContactName = false;
-  URLUPLOAD = 'http://192.168.4.63:8080/amifa-1/';
+  RESTURL = 'https://api.upay.africa:8080/api/';
+  // URLUPLOAD = 'https://api.upay.africa:8080/api/admin/upload';
+  // URLUPLOAD = 'http://192.168.4.63/api/admin/upload';
+  notifications: any;
+  URLONESIGNALAPI = 'https://onesignal.com/api/v1/notifications';
   isLoadingShowing = false;
   isErrorShowing = false;
   showheader = true;
@@ -58,6 +67,7 @@ export class GlobalVariableService {
   database: SQLiteObject;
   enecoute = false;
   qrcmode = false;
+  acceptedcgu = false;
   prodpackageName = 'atps.africa.upaymobile';
   // tslint:disable-next-line: max-line-length
   public OperatorsImages = [{ codeoper: '0054', image: this.IMG_URL + 'emoney.png', sousop: '' }, { codeoper: '0025', image: this.IMG_URL + 'omoney.png', sousop: '' },

@@ -11,6 +11,7 @@ import { PopoverContactComponent } from '../popover-contact/popover-contact.comp
 import { Contacts, ContactFindOptions } from '@ionic-native/contacts/ngx';
 import { SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { CheckService } from 'src/app/services/check.service';
+import { Clipboard } from '@ionic-native/clipboard/ngx';
 
 @Component({
   selector: 'app-recharge',
@@ -31,6 +32,7 @@ export class RechargeComponent implements OnInit {
               public serv: ServiceService,
               public glb: GlobalVariableService,
               private check: CheckService,
+              private clipboard: Clipboard,
     // tslint:disable-next-line: deprecation
               public contact: Contacts,
               public monmillier: MillierPipe,
@@ -76,19 +78,19 @@ export class RechargeComponent implements OnInit {
   }
   getrecent() {
     this.recentsContacts = [];
-    this.serv.getDataBase()
-      .then((db: SQLiteObject) => {
-        const sql = 'select * from recents where codeoperateur=? and sousoperateur =? and numcompte=? order by datemisajour desc limit 5';
-        const values = [this.datarecharge.codeOperateur, this.datarecharge.sousoperateur, this.glb.NUMCOMPTE];
-        db.executeSql(sql, values)
+    /* this.serv.getDataBase()
+      .then((db: SQLiteObject) => { */
+    const sql = 'select * from recents where codeoperateur=? and sousoperateur =? and numcompte=? order by datemisajour desc limit 5';
+    const values = [this.datarecharge.codeOperateur, this.datarecharge.sousoperateur, this.glb.NUMCOMPTE];
+    this.glb.LITEDB.executeSql(sql, values)
           .then((data) => {
             for (let i = 0; i < data.rows.length; i++) {
               this.recentsContacts.push((data.rows.item(i)));
             }
           })
           .catch(e => { });
-      })
-      .catch(e => { });
+  /*     })
+      .catch(e => { }); */
 
   }
   changemontant() {
@@ -116,7 +118,17 @@ export class RechargeComponent implements OnInit {
     });
 
   } */
-
+  pasteText(){
+    this.clipboard.paste().then(
+      (resolve: string) => {
+         this.Rechargedata.controls.telephone.setValue(resolve);
+         console.log(resolve);
+       },
+       (reject: string) => {
+         console.error('Error: ' + reject);
+       }
+     );
+  }
   async showPin() {
     const params = this.Rechargedata.getRawValue();
     const montantPlafond = this.glb.HEADER.montant.replace(/ /g, '') * 1;
@@ -141,13 +153,6 @@ export class RechargeComponent implements OnInit {
         if (codepin !== null && codepin.data) {
           this.Rechargedata.controls.pin.setValue(codepin.data);
           this.rechargerServ();
-          /*       const confmodal =  this.modal.create({
-                  component: ConfirmationComponent
-                }).then((e) => {
-                  e.present();
-                }); */
-          //  this.dataReturned = dataReturned.data;
-          // alert('Modal Sent Data :'+ dataReturned);
         }
       });
 
@@ -184,7 +189,7 @@ export class RechargeComponent implements OnInit {
     if (parametres.recharge.oper === '0073') {
       parametres.recharge.telephone = '221' + parametres.recharge.telephone;
     }
-    // alert(JSON.stringify(parametres));
+    console.log(JSON.stringify(parametres));
     this.serv.posts('recharge/' + file + '.php', parametres, {}).then(data => {
       this.serv.dismissloadin();
       const reponse = JSON.parse(data.data);
@@ -204,6 +209,7 @@ export class RechargeComponent implements OnInit {
           if (parametres.recharge.oper === '0074') {
             this.glb.recu.telRech = reponse.codeTransfert;
           }
+
           this.glb.showRecu = true;
           this.glb.HEADER.montant = this.monmillier.transform(reponse.mntPlfap);
           this.glb.dateUpdate = this.serv.getCurrentDate();
@@ -227,10 +233,11 @@ export class RechargeComponent implements OnInit {
           parametres.recharge.operation = this.datarecharge.operation;
           parametres.recharge.label = 'N° Tel';
           if (parametres.recharge.oper === '0073') {
-            parametres.recharge.operation  = 'Transfert UPAY';
+            parametres.recharge.operation = 'Transfert UPAY';
+            this.serv.notifierben(parametres.recharge);
           }
           if (parametres.recharge.oper === '0074') {
-            parametres.recharge.operation  = 'Retrait UPAY';
+            parametres.recharge.operation = 'Retrait UPAY';
           }
           this.serv.notifier(parametres.recharge);
           const mod = this.modal.create({
@@ -252,7 +259,7 @@ export class RechargeComponent implements OnInit {
     }).catch(err => {
       this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
     });
-}
+  }
 
   listecontacts() {
     // this.showName = false;

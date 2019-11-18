@@ -9,6 +9,7 @@ import { SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { CustomValidatorPhone } from '../customValidator/custom-validator';
 import { MillierPipe } from 'src/app/pipes/millier.pipe';
 import { CheckService } from 'src/app/services/check.service';
+import { Clipboard } from '@ionic-native/clipboard/ngx';
 
 @Component({
   selector: 'releve-encaissement',
@@ -31,6 +32,7 @@ export class ReleveEncaissementComponent implements OnInit {
               public serv: ServiceService,
               public glb: GlobalVariableService,
               public modal: ModalController,
+              private clipboard: Clipboard,
               private check: CheckService,
               public monmillier: MillierPipe) {
     this.Encdata = this.formBuilder.group({
@@ -44,7 +46,22 @@ export class ReleveEncaissementComponent implements OnInit {
     });
   }
 
-
+  pasteText(type: string) {
+    // console.log(' type ' + type)
+    this.clipboard.paste().then(
+      (resolve: string) => {
+        if (type === 'ref') {
+          // console.log(resolve);
+          this.Encdata.controls.reference.setValue(resolve);
+        } else {
+          this.Encdata.controls.telephone.setValue(resolve);
+        }
+       },
+       (reject: string) => {
+         console.error('Error: ' + reject);
+       }
+     );
+  }
   ngOnInit() {
     this.vider();
     this.getrecent();
@@ -211,6 +228,7 @@ encaisser(facture, params) {
 
             this.infosClient.controls.nom.setValue('');
             if (reponse.Factures.Facture.length) {
+              this.factures = reponse;
               this.factures.nomClient = reponse.NomClient;
               this.factures.numfacture = reponse.IdClient;
               // tslint:disable-next-line: prefer-for-of
@@ -378,19 +396,19 @@ encaisser(facture, params) {
   }
   getrecent() {
     this.recentsContacts = [];
-    this.serv.getDataBase()
-    .then((db: SQLiteObject) => {
-      const sql = 'select * from recents where codeoperateur=? and sousoperateur =? and numcompte=? order by datemisajour desc limit 5';
-      const values = [this.datareleve.codeoper, '', this.glb.NUMCOMPTE];
-      db.executeSql(sql, values)
+/*     this.serv.getDataBase()
+    .then((db: SQLiteObject) => { */
+    const sql = 'select * from recents where codeoperateur=? and sousoperateur =? and numcompte=? order by datemisajour desc limit 5';
+    const values = [this.datareleve.codeoper, '', this.glb.NUMCOMPTE];
+    this.glb.LITEDB.executeSql(sql, values)
         .then((data) => {
           for (let i = 0; i < data.rows.length; i++) {
             this.recentsContacts.push((data.rows.item(i)));
           }
           })
         .catch(e => {});
-    })
-    .catch(e => {});
+/*     })
+    .catch(e => {}); */
 
   }
 }

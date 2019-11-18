@@ -12,6 +12,7 @@ import { PinValidationPage } from 'src/app/pages/utilisateur/pin-validation/pin-
 import { ConfirmationComponent } from 'src/app/components/confirmation/confirmation.component';
 import { SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { CheckService } from 'src/app/services/check.service';
+import { Clipboard } from '@ionic-native/clipboard/ngx';
 
 @Component({
   selector: 'app-woyofal',
@@ -34,6 +35,7 @@ export class WoyofalPage implements OnInit {
               public monmillier: MillierPipe,
               public navCtrl: NavController,
               private check: CheckService,
+              private clipboard: Clipboard,
               public glb: GlobalVariableService,
               public modal: ModalController) {
     this.clientForm = this.formBuilder.group({
@@ -58,19 +60,19 @@ export class WoyofalPage implements OnInit {
   }
   getrecent() {
     this.recentsContacts = [];
-    this.serv.getDataBase()
-    .then((db: SQLiteObject) => {
-      const sql = 'select * from recents where codeoperateur=? and sousoperateur =? and numcompte=? order by datemisajour desc limit 5';
-      const values = ['0029', '', this.glb.NUMCOMPTE];
-      db.executeSql(sql, values)
+/*     this.serv.getDataBase()
+    .then((db: SQLiteObject) => { */
+    const sql = 'select * from recents where codeoperateur=? and sousoperateur =? and numcompte=? order by datemisajour desc limit 5';
+    const values = ['0029', '', this.glb.NUMCOMPTE];
+    this.glb.LITEDB.executeSql(sql, values)
         .then((data) => {
           for (let i = 0; i < data.rows.length; i++) {
             this.recentsContacts.push((data.rows.item(i)));
           }
           })
         .catch(e => {});
-    })
-    .catch(e => {});
+/*     })
+    .catch(e => {}); */
   }
   relever() {
     this.showdetails = this.newclient = false;
@@ -258,5 +260,15 @@ async showPin() {
     this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
   });
   }
-
+  pasteText(){
+    this.clipboard.paste().then(
+      (resolve: string) => {
+         this.clientForm.controls.numcompteur.setValue(resolve);
+         console.log(resolve);
+       },
+       (reject: string) => {
+         console.error('Error: ' + reject);
+       }
+     );
+  }
 }

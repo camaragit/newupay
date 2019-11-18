@@ -58,7 +58,7 @@
     <div id="messagestatus">
       Transaction effectuée avec succés
     </div>
-    <div id="actiondiv">
+    <div id="actiondiv" *ngIf="!commingData.mode">
       <div id="goacceuil" (click)="gohome()">
                <span>
                     <img src="assets/images/iconvalidation.png" height="55"/>
@@ -72,14 +72,19 @@
         <label style="font-size: 13px;">Nouveau</label>
       </div>
     </div>
+    <div id="actiondiv" *ngIf="commingData.mode">
+      <div id="goacceuil" (click)="dismiss()">
+               <span>
+                    <img src="assets/images/iconvalidation.png" height="55"/>
+               </span>
+        <label style="font-size: 13px;">Fermer</label>
+      </div>
+    </div>
 
   </div>
-
 </ion-header>
-
 <ion-content>
 <div class="bodycontent">
-
 </div>
 </ion-content>
 <app-footer></app-footer>

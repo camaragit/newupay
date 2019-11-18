@@ -39,8 +39,9 @@
         <img src="assets/images/upayv2.png" height="50"/><br>
         <span style="color: black;">Bolé ñëp mën lépp</span>
       </div>
-      <div class="actualise">
-
+      <div class="actualise" (click)="versnotification()">
+        <ion-icon size="large" style="height:28px; color:#2364cc;" name="notifications-outline"></ion-icon>
+        <ion-badge id="cart-badge" *ngIf="glb.nombreNotif > 0" color="danger">{{glb.nombreNotif}}</ion-badge>
       </div>
     </div>
     <div id="soldecmpt">

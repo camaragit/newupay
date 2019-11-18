@@ -23,8 +23,9 @@
               <img src="assets/images/upayv2.png" height="75" /><br />
               <span>Bolé ñëp mën lépp</span>
             </div>
-            <div class="actualise">
-              <!--   <img src="assets/images/refresh.png" height="23"/> -->
+            <div class="actualise" (click)="versnotification()">
+              <ion-icon size="large" style="height:28px; color:#2364cc;" name="notifications-outline"></ion-icon>
+              <ion-badge id="cart-badge" *ngIf="glbVariable.nombreNotif > 0" color="danger">{{glbVariable.nombreNotif}}</ion-badge>
             </div>
           </div>
           <div id="soldecmpt">
@@ -94,7 +95,7 @@
 
     </div>
 
-    <div (click)="paiement()" style="background: url('assets/images/demicercle.png') no-repeat #2C5AA3;background-size: 100%;"
+    <div (click)="paiementQR()" style="background: url('assets/images/demicercle.png') no-repeat #2C5AA3;background-size: 100%;"
       class="qrcode">
       <span class="qrcodelogo"><img style="width: 65px;" src="assets/images/qrcode.png" alt=""></span>
     </div>

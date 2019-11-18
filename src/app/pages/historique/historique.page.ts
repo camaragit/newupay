@@ -157,5 +157,8 @@ export class HistoriquePage implements OnInit {
       this.serv.showError('Impossible d\'atteindre le serveur ');
     });
   }
+  versnotification(){
+    this.navCtrl.navigateForward('/utilisateur/inbox');
+  }
 
 }

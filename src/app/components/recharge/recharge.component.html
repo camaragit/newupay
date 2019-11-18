@@ -1,7 +1,7 @@
 
 <div id="contentform" style="padding-bottom:40px">
   <form [formGroup]="Rechargedata" class="formulaire typeform2" >
-    <div class="formdiv" [style.border-color]="Rechargedata.controls.telephone.errors && Rechargedata.controls.telephone.touched ? 'red' : '#578cc9'">
+    <div class="formdiv" (press)="pasteText()" [style.border-color]="Rechargedata.controls.telephone.errors && Rechargedata.controls.telephone.touched ? 'red' : '#578cc9'">
       <div class="light" id="newcontact" (click)="listecontacts()">
         <span><img  src="assets/images/new_contact.png" style="width:22px"/></span>
       </div>

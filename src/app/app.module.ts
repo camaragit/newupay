@@ -16,7 +16,7 @@ import { ServiceService } from './services/service.service';
 import { Sim } from '@ionic-native/sim/ngx';
 import { Network } from '@ionic-native/network/ngx';
 import { Toast } from '@ionic-native/toast/ngx';
-
+import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { HTTP } from '@ionic-native/http/ngx';
@@ -37,15 +37,18 @@ import { CodePush } from '@ionic-native/code-push/ngx';
 import {OneSignal} from '@ionic-native/onesignal/ngx';
 import { CheckService } from './services/check.service';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
+import { QrService } from './services/qr.service';
+import { Clipboard } from '@ionic-native/clipboard/ngx';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), SharedModule, AppRoutingModule, IonicStorageModule.forRoot()],
+  imports: [BrowserModule,  IonicModule.forRoot(), SharedModule, AppRoutingModule, IonicStorageModule.forRoot()],
   providers: [
     StatusBar, SQLite, Toast,  Sim, Network, OperatorImagePipe, LocalNotifications, CallNumber,
-    SplashScreen, GlobalVariableService, Camera, Base64, ServiceService, HTTP, Contacts, FilePath, FormatcodePipe,
+    SplashScreen, GlobalVariableService, Camera, Base64, ServiceService, QrService, HTTP, Contacts, FilePath, FormatcodePipe,
     MillierPipe, FormatphonePipe, AndroidPermissions,  FormatdatePipe, CoupurechainePipe, BarcodeScanner,
-    AppVersion, CodePush, OneSignal, CheckService, InAppBrowser,
+    AppVersion, CodePush, OneSignal, CheckService, InAppBrowser, SQLitePorter, Clipboard,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

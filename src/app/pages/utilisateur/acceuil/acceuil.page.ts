@@ -5,6 +5,7 @@ import { PinValidationPage } from '../pin-validation/pin-validation.page';
 import { ServiceService } from 'src/app/services/service.service';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { Router } from '@angular/router';
+import { QrService } from 'src/app/services/qr.service';
 
 @Component({
   selector: 'app-acceuil',
@@ -17,6 +18,7 @@ export class AcceuilPage implements OnInit {
   constructor(public navCtrl: NavController,
               public glbVariable: GlobalVariableService,
               public serv: ServiceService,
+              public qrserv: QrService,
               public barcodeScanner: BarcodeScanner,
               public modal: ModalController ) {
               }
@@ -56,7 +58,9 @@ export class AcceuilPage implements OnInit {
     this.navCtrl.navigateForward(chemin);
   }
 
-
+  versnotification(){
+    this.navCtrl.navigateForward('/utilisateur/inbox');
+  }
 
   mescartes() {
     this.navCtrl.navigateForward('compte');
@@ -70,11 +74,15 @@ export class AcceuilPage implements OnInit {
         .scan()
         .then(barcodeData => {
           // const infos  = barcodeData.text.split(';');
-          // alert('infos recuperees ' + JSON.stringify(barcodeData));
+         // alert('infos recuperees ' + JSON.stringify(barcodeData));
           this.glbVariable.qrcmode = barcodeData.cancelled ? true : false;
         })
         .catch(err => {
         });
+  }
+  paiementQR() {
+    //this.serv.showAlert('Service en cours de developpement')
+    this.qrserv.showChoice();
   }
 
 }

@@ -6,11 +6,12 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { ServiceService } from './services/service.service';
 import { GlobalVariableService } from './services/global-variable.service';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 import { AppVersion } from '@ionic-native/app-version/ngx';
 import { CodePush } from '@ionic-native/code-push/ngx';
 import { Network } from '@ionic-native/network/ngx';
-
+import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
+import { ReglecguComponent } from './components/reglecgu/reglecgu.component';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
@@ -43,6 +44,7 @@ export class AppComponent {
     private network: Network,
     private modal: ModalController,
     private menu: MenuController,
+    private sqlitePorter: SQLitePorter,
     private toastController: ToastController
   ) {
     this.initializeApp();
@@ -51,8 +53,9 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       this.platform.backButton.subscribeWithPriority(0, () => {
+      console.log('mode qr ' + this.glb.qrcmode);
       if (!this.glb.qrcmode) {
-        if (this.routerOutlet && this.routerOutlet.canGoBack()) {
+        if (this.routerOutlet && this.routerOutlet.canGoBack() && !this.glb.isLoadingShowing)  {
           this.routerOutlet.pop();
        } else {
         const routes = ['/utilisateur', '/utilisateur/acceuil'];
@@ -65,12 +68,21 @@ export class AppComponent {
       }
 
       });
-      this.codepush.sync().subscribe(() => {});
+      this.appVersion.getPackageName().then((val) => {
+        if (val === this.glb.prodpackageName) {
+        this.codepush.sync().subscribe(() => {});
+        }
+      });
+
       this.platform.pause.subscribe(() => {
         this.glb.DATEPAUSE = new Date();
       });
       this.platform.resume.subscribe(() => {
-        this.codepush.sync().subscribe(() => {});
+        this.appVersion.getPackageName().then((val) => {
+          if (val === this.glb.prodpackageName) {
+          this.codepush.sync().subscribe(() => {});
+          }
+        });
         this.glb.DATEREPRISE = new Date();
         const diff = this.serv.dateDiff(this.glb.DATEPAUSE, this.glb.DATEREPRISE);
         const route = ['/utilisateur', '/utilisateur/souscription', '/utilisateur/suitesouscription',
@@ -89,7 +101,7 @@ export class AppComponent {
       });
       this.statusBar.backgroundColorByHexString('#2c5aa3');
       this.splashScreen.hide();
-      this.serv.createDataBase();
+      this.serv.getDataBase();
       window.addEventListener('keyboardDidHide', () => {
         this.glb.showheader = true;
       });
@@ -181,5 +193,26 @@ export class AppComponent {
   verssite() {
     this.menu.toggle();
     // this.tab.create('http://www.upay.africa','_system');
+  }
+  verscgu() {
+    const mod = this.modal.create({
+      component: ReglecguComponent,
+    }).then((e) => {
+      this.menu.toggle();
+      e.present();
+    });
+  }
+  deplafonnement() {
+    const params: any = {};
+    params.nom = this.glb.NOM;
+    params.prenom = this.glb.PRENOM;
+    params.cocche = true;
+    const navigationExtras: NavigationExtras = {
+      state: {
+        user: params
+      }
+    };
+    this.menu.toggle();
+    this.navCtrl.navigateRoot('utilisateur/souscription', navigationExtras);
   }
 }

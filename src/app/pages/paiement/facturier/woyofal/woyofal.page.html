@@ -2,9 +2,9 @@
 <ion-content>
     <div style="padding: 15px">
         <form [formGroup]="clientForm">
-            <div class="formdiv releve"  [style.border-color]="clientForm.controls.numcompteur.errors && clientForm.controls.numcompteur.touched ? 'red' : '#578cc9'">
+            <div class="formdiv releve" (press)="pasteText()" [style.border-color]="clientForm.controls.numcompteur.errors && clientForm.controls.numcompteur.touched ? 'red' : '#578cc9'">
                 <label>Renseigner le numéro de compteur</label>
-                <input type="tel" (input)="vider()" formControlName="numcompteur" placeholder="Entrer le numéro ici" />
+                <input type="tel" (input)="vider()"  formControlName="numcompteur" placeholder="Entrer le numéro ici" />
                 <div></div>
             </div>
 

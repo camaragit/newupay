@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonContent, NavController, Platform, ModalController } from '@ionic/angular';
+import { IonContent, NavController, Platform, ModalController, IonRouterOutlet } from '@ionic/angular';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Base64 } from '@ionic-native/base64/ngx';
@@ -16,8 +16,7 @@ import { FormatphonePipe } from 'src/app/pipes/formatphone.pipe';
 import { CustomValidatorPhone } from 'src/app/components/customValidator/custom-validator';
 import { HTTP } from '@ionic-native/http/ngx';
 import {FilePath} from '@ionic-native/file-path/ngx';
-import { MessageComponent } from 'src/app/components/message/message.component';
-import { PubliciteComponent } from 'src/app/components/publicite/publicite.component';
+import { ReglecguComponent } from 'src/app/components/reglecgu/reglecgu.component';
 
 @Component({
   selector: 'app-souscription',
@@ -36,6 +35,8 @@ export class SouscriptionPage implements OnInit {
   commingData: any;
   public titre: any = 'Nouvelle souscription';
   public Userdata: FormGroup;
+  public rectosend = false;
+  public versosend = false;
   public desactiv = false;
   @ViewChild(IonContent) content: IonContent;
   constructor(private camera: Camera, public glb: GlobalVariableService,
@@ -66,7 +67,7 @@ export class SouscriptionPage implements OnInit {
                   // tslint:disable-next-line: max-line-length
                   email: ['', [Validators.required, Validators.pattern('^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$')]],
                   imei: [''],
-                  ok: [false, Validators.requiredTrue ],
+                  ok: [false],
                   idSim1: [''],
                   idSim2: [''],
                   mode: ['S']
@@ -78,10 +79,11 @@ export class SouscriptionPage implements OnInit {
                   this.Userdata.controls.login.setValue(this.glb.PHONE);
                   this.titre = 'Complément profil';
                   this.desactiv = true;
-                  this.serv.showError('Merci de compléter votre profil');
+                  // this.serv.showError('Merci de compléter votre profil');
                 } else {
                   this.desactiv = false;
                 }
+
               }
 
   verspagesuivant() {
@@ -97,30 +99,99 @@ export class SouscriptionPage implements OnInit {
     // this.navCtrl.navigateForward('souscriptionsuite');
   }
   ngOnInit() {
+    this.glb.acceptedcgu = false;
   }
   takeRecto() {
-    this.urlRecto = '';
-    const options: CameraOptions = {
-      quality: 100,
-      destinationType: this.camera.DestinationType.FILE_URI,
-      encodingType: this.camera.EncodingType.JPEG,
-      correctOrientation: true,
-      allowEdit : true,
-      mediaType: this.camera.MediaType.PICTURE
-    };
-    this.camera.getPicture(options).then((imageData) => {
-      // imageData is either a base64 encoded string or a file URI
-      // If it's base64 (DATA_URL):
-/*       this.pictureRecto = 'data:image/jpeg;base64,' + imageData;
-      this.pictureRecto =  imageData; */
-      this.base64.encodeFile(imageData).then((base64File: string) => {
+    if (!this.Userdata.controls.login.value || this.Userdata.controls.login.value === ''  ) {
+      this.serv.showError('Merci de renseigner votre numéro de téléphone');
+    } else {
+      this.urlRecto = '';
+      const options: CameraOptions = {
+        quality: 100,
+        destinationType: this.camera.DestinationType.FILE_URI,
+        encodingType: this.camera.EncodingType.JPEG,
+        correctOrientation: true,
+        allowEdit : true,
+        mediaType: this.camera.MediaType.PICTURE
+      };
+      this.camera.getPicture(options).then((imageData) => {
+        // imageData is either a base64 encoded string or a file URI
+        // If it's base64 (DATA_URL):
+  /*       this.pictureRecto = 'data:image/jpeg;base64,' + imageData;
+        this.pictureRecto =  imageData; */
+        this.base64.encodeFile(imageData).then((base64File: string) => {
 
-        //  let img= "data:image/png;base64,"+base64File.replace("data:image/*;charset=utf-8;base64,","");
-          const img = 'data:image/jpeg;base64,' + base64File.replace('data:image/*;charset=utf-8;base64,', '');
-         // this.isphoto = true;
-          this.pictureRecto = this.sanitizer.bypassSecurityTrustUrl(img);
-          this.isrecto = true;
-          this.filePath.resolveNativePath(imageData)
+          //  let img= "data:image/png;base64,"+base64File.replace("data:image/*;charset=utf-8;base64,","");
+            const img = 'data:image/jpeg;base64,' + base64File.replace('data:image/*;charset=utf-8;base64,', '');
+           // this.isphoto = true;
+            this.pictureRecto = this.sanitizer.bypassSecurityTrustUrl(img);
+            this.isrecto = true;
+            const tel = this.Userdata.controls.login.value;
+            const file = base64File.replace('data:image/*;charset=utf-8;base64,', 'data:image/jpeg;base64,');
+            console.log('fichier à envoyer ' + file);
+            this.uploadphoto(tel, file, 'recto');
+
+  /*           this.filePath.resolveNativePath(imageData)
+            .then((path) => {
+              this.http.setDataSerializer('json');
+              this.http.setSSLCertMode('nocheck');
+              this.http.post(this.glb.URLUPLOAD + 'auth/signin', {username: 'appmobile', password: 'passer'}, {}).then((data) => {
+                const reponse = JSON.parse(data.data);
+                const header = {Authorization : reponse.tokenType + ' ' + reponse.accessToken};
+                this.http.uploadFile(this.glb.URLUPLOAD + 'uploadFile', {}, header, path, 'file').then((repon) => {
+                  const rep = JSON.parse(repon.data);
+                  this.urlRecto = rep.fileDownloadUri;
+                //  alert('uploadFile data ' + JSON.stringify(rep.fileDownloadUri));
+            }).catch((err) => {
+             // alert('erreur uploadFile ' + JSON.stringify(err));
+            });
+
+              }).catch((err) => {
+                // alert('erreur ws ' + JSON.stringify(err));
+              });
+            })
+            .catch((err) => {
+              console.error(err);
+            }); */
+          }).catch((err) => {
+          });
+       }).catch((err) => {
+      });
+
+    }
+
+  }
+  takeVerso() {
+    if (!this.Userdata.controls.login.value || this.Userdata.controls.login.value === '') {
+      this.serv.showError('Merci de renseigner votre numéro de téléphone');
+    } else {
+      this.urlVerso = '';
+      const options: CameraOptions = {
+        quality: 100,
+        destinationType: this.camera.DestinationType.FILE_URI,
+        encodingType: this.camera.EncodingType.JPEG,
+        mediaType: this.camera.MediaType.PICTURE,
+        correctOrientation: true,
+        cameraDirection: 1,
+        allowEdit : true,
+      };
+      this.camera.getPicture(options).then((imageData) => {
+        // imageData is either a base64 encoded string or a file URI
+        // If it's base64 (DATA_URL):
+        this.base64.encodeFile(imageData).then((base64File: string) => {
+
+          //  let img= "data:image/png;base64,"+base64File.replace("data:image/*;charset=utf-8;base64,","");
+            const img = 'data:image/jpeg;base64,' + base64File.replace('data:image/*;charset=utf-8;base64,', '');
+           // this.isphoto = true;
+            this.pictureVerso = this.sanitizer.bypassSecurityTrustUrl(img);
+            this.isVerso = true;
+            const tel = this.Userdata.controls.login.value;
+            const file = base64File.replace('data:image/*;charset=utf-8;base64,', 'data:image/jpeg;base64,');
+            console.log('fichier à envoyer ' + file);
+            this.uploadphoto(tel, file, 'verso');
+          }, (err) => {
+          });
+  /*       this.filePath.resolveNativePath(imageData)
           .then((path) => {
             this.http.setDataSerializer('json');
             this.http.setSSLCertMode('nocheck');
@@ -129,71 +200,25 @@ export class SouscriptionPage implements OnInit {
               const header = {Authorization : reponse.tokenType + ' ' + reponse.accessToken};
               this.http.uploadFile(this.glb.URLUPLOAD + 'uploadFile', {}, header, path, 'file').then((repon) => {
                 const rep = JSON.parse(repon.data);
-                this.urlRecto = rep.fileDownloadUri;
-              //  alert('uploadFile data ' + JSON.stringify(rep.fileDownloadUri));
+                this.urlVerso = rep.fileDownloadUri;
+                // alert('uploadFile data ' + JSON.stringify(rep.fileDownloadUri));
           }).catch((err) => {
            // alert('erreur uploadFile ' + JSON.stringify(err));
           });
 
             }).catch((err) => {
-              // alert('erreur ws ' + JSON.stringify(err));
+            //  alert('erreur ws ' + JSON.stringify(err));
             });
           })
           .catch((err) => {
             console.error(err);
-          });
-        }).catch((err) => {
-        });
-     }).catch((err) => {
-    });
-  }
-  takeVerso() {
-    this.urlVerso = '';
-    const options: CameraOptions = {
-      quality: 100,
-      destinationType: this.camera.DestinationType.FILE_URI,
-      encodingType: this.camera.EncodingType.JPEG,
-      mediaType: this.camera.MediaType.PICTURE,
-      correctOrientation: true,
-      allowEdit : true,
-    };
-    this.camera.getPicture(options).then((imageData) => {
-      // imageData is either a base64 encoded string or a file URI
-      // If it's base64 (DATA_URL):
-      this.base64.encodeFile(imageData).then((base64File: string) => {
+          }); */
+       }, (err) => {
+        // Handle error
+       });
 
-        //  let img= "data:image/png;base64,"+base64File.replace("data:image/*;charset=utf-8;base64,","");
-          const img = 'data:image/jpeg;base64,' + base64File.replace('data:image/*;charset=utf-8;base64,', '');
-         // this.isphoto = true;
-          this.pictureVerso = this.sanitizer.bypassSecurityTrustUrl(img);
-          this.isVerso = true;
-        }, (err) => {
-        });
-      this.filePath.resolveNativePath(imageData)
-        .then((path) => {
-          this.http.setDataSerializer('json');
-          this.http.setSSLCertMode('nocheck');
-          this.http.post(this.glb.URLUPLOAD + 'auth/signin', {username: 'appmobile', password: 'passer'}, {}).then((data) => {
-            const reponse = JSON.parse(data.data);
-            const header = {Authorization : reponse.tokenType + ' ' + reponse.accessToken};
-            this.http.uploadFile(this.glb.URLUPLOAD + 'uploadFile', {}, header, path, 'file').then((repon) => {
-              const rep = JSON.parse(repon.data);
-              this.urlVerso = rep.fileDownloadUri;
-              // alert('uploadFile data ' + JSON.stringify(rep.fileDownloadUri));
-        }).catch((err) => {
-         // alert('erreur uploadFile ' + JSON.stringify(err));
-        });
+    }
 
-          }).catch((err) => {
-          //  alert('erreur ws ' + JSON.stringify(err));
-          });
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-     }, (err) => {
-      // Handle error
-     });
     }
   cocher() {
 
@@ -212,11 +237,37 @@ export class SouscriptionPage implements OnInit {
   logScrollStart() {
   }
 
-  logScrolling() {
+  async logScrolling($event) {
     const el = document.querySelector('ion-content');
 
     // get scroll position in px
-    console.log(el.scrollHeight, el.scrollTop);
+    const scrollElement = await $event.target.getScrollElement();
+    // console.log({scrollElement});
+    const scrollHeight = scrollElement.scrollHeight - scrollElement.clientHeight;
+    // console.log({scrollHeight});
+    const currentScrollDepth = $event.detail.scrollTop;
+  //  console.log({currentScrollDepth});
+
+    const targetPercent = 100;
+
+    const triggerDepth = ((scrollHeight / 100) * targetPercent);
+   // console.log({triggerDepth});
+
+    if (currentScrollDepth > triggerDepth) {
+      console.log('bottom atteint');
+     // console.log(`Scrolled to ${targetPercent}%`);
+      // this ensures that the event only triggers once
+      // this.scrollDepthTriggered = true;
+      // do your analytics tracking here
+    }
+
+  }
+  verscgu() {
+    const mod = this.modalCrtl.create({
+      component: ReglecguComponent,
+    }).then((e) => {
+      e.present();
+    });
   }
 
   logScrollEnd() {
@@ -242,35 +293,76 @@ export class SouscriptionPage implements OnInit {
    this.navCtrl.navigateBack('utilisateur');
 }
   generateOTPCode() {
-    // this.Userdata.controls.login.setValue('221' + this.Userdata.controls.login.value);
-     const userdata = this.Userdata.getRawValue();
-     userdata.login = '221' + this.Userdata.controls.login.value;
-     userdata.login = userdata.login.replace(/-/g, '');
+    if (this.coche && !this.rectosend) {
+      this.serv.showError('Merci de prendre en recto votre piece d\'identité');
+    } else if (this.coche && !this.versosend) {
+      this.serv.showError('Merci de prendre en verso votre piece d\'identité');
+    } else {
+      if (this.glb.acceptedcgu) {
+        // this.Userdata.controls.login.setValue('221' + this.Userdata.controls.login.value);
+   const userdata = this.Userdata.getRawValue();
+   userdata.login = '221' + this.Userdata.controls.login.value;
+   userdata.login = userdata.login.replace(/-/g, '');
+   this.serv.afficheloading();
+   this.serv.posts('connexion/generateOTP.php', userdata, {}).then(data => {
+     this.serv.dismissloadin();
+     const reponse = JSON.parse(data.data);
+     console.log(reponse);
+     if (reponse.returnCode) {
+           if (reponse.returnCode === '0') {
+       const navigationExtras: NavigationExtras = {
+         state: {
+           user: userdata
+         }
+       };
+       this.router.navigate(['/utilisateur/suitesouscription'], navigationExtras);
+     } else { this.serv.showError('Opération échouée'); }
+     } else {
+       this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard  ');
+     }
+
+
+   }).catch(err => {
+     this.serv.dismissloadin();
+
+     this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
+
+   });
+
+  } else {
+    this.verscgu();
+  }
+
+    }
+
+
+   }
+   uploadphoto(telephone, image, section) {
+     const url = this.glb.RESTURL + 'admin/upload';
+     const params: any = {};
+     params.telephone = '221' + telephone;
+     params.libelle = section;
+     params.imageBase64 = image;
      this.serv.afficheloading();
-     this.serv.posts('connexion/generateOTP.php', userdata, {}).then(data => {
-       this.serv.dismissloadin();
+     this.serv.post(url, params,{}).then((data) => {
        const reponse = JSON.parse(data.data);
-       if (reponse.returnCode) {
-             if (reponse.returnCode === '0') {
-         const navigationExtras: NavigationExtras = {
-           state: {
-             user: userdata
-           }
-         };
-         this.router.navigate(['/utilisateur/suitesouscription'], navigationExtras);
-       } else { this.serv.showError('Opération échouée'); }
+       console.log('reponse upload ' + JSON.stringify(reponse))
+       if (reponse.codeRetour === '0') {
+         this.serv.dismissloadin();
+         this.serv.showToast('Fichier envoyé avec succès');
+         if (section === 'recto') {
+           this.rectosend = true;
+         }
+         if (section === 'verso') {
+           this.versosend = true;
+         }
        } else {
-         this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard  ');
+         this.serv.showError('Impossible d\'envoyer le fichier');
        }
-
-
-     }).catch(err => {
-       this.serv.dismissloadin();
-
-       this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
+     }).catch((err) => {
+      this.serv.showError('Impossible d\'envoyer le fichier ' + JSON.stringify(err));
+      // alert('errr ' + JSON.stringify(err));
 
      });
-
-
    }
 }

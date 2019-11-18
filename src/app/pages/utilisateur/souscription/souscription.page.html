@@ -1,4 +1,4 @@
-<ion-content style="--ion-background-color:white" [scrollEvents]="true" (ionScrollStart)="logScrollStart()" (ionScroll)="logScrolling()" (ionScrollEnd)="logScrollEnd()">
+<ion-content style="--ion-background-color:white" [scrollEvents]="true" (ionScrollStart)="logScrollStart()" (ionScroll)="logScrolling($event)" (ionScrollEnd)="logScrollEnd()">
   <div id="content" class="flexcenter">
     <div id="page">
       <div class="flex1">
@@ -43,15 +43,14 @@
               <input type="email"  formControlName="email"  placeholder="Ecrivez votre e-mail" />
               <div></div>
             </div>
-<!-- 
+
              <div style="margin-top: 30px;" class="formdiv suppl click">
               <label for="deplaf">
                 <span (click)="cocher()">Je souhaite déplafonner mon compte maintenant</span>
                 <input type="checkbox" id="deplaf" />
                 <span (click)="cocher()" class="checkmark"></span>
               </label>
-
-            </div>  -->
+            </div> 
 
             <div [class.active]="coche" class="deplafoncompte">
               <div class="formdiv">
@@ -59,7 +58,7 @@
                 <input type="text" placeholder="Renseigez votre adress ici" />
                 <div></div>
               </div>
-              <div style="margin-bottom: 0px" class="formdiv bordernull">
+<!--               <div style="margin-bottom: 0px" class="formdiv bordernull">
                 <label>Genre *</label>
                 <div class="genrediv">
                   <label style="margin-bottom: 0px" class="radio">Homme
@@ -72,13 +71,13 @@
                   </label>
 
                 </div>
-              </div>
-              <div class="formdiv1">
+              </div> -->
+     <!--          <div class="formdiv1">
                 <select>
                   <option>Type de piéce *</option>
                   <option>CNI</option>
                 </select>
-              </div>
+              </div> -->
               <div style="display: flex; width:100%;justify-content: space-between;">
                 <div class="scandiv" [style.height]="isrecto ? 'auto' : '103px'" [style.background]="isrecto ? 'none' : '#659CD5'" style='width:45%; position: relative;' (click)="takeRecto()">
                     <div style="position: absolute; ;z-index:999; width:100%; height: 100%;text-align: center; top:0;left: 0;">
@@ -99,19 +98,17 @@
 
             </div>
 
-            <div class="formdiv suppl">
+            <div style="padding-top:15px !important;" class="formdiv suppl" (click)="verscgu()">
+                <ion-icon style="color: #074a94 !important;" [name]="glb.acceptedcgu ? 'checkmark-circle-outline' : 'radio-button-off'" size="large"></ion-icon>
               <label class="el-switch custom" style="padding-left:0;display:flex;">
-                <span style="margin-right:10px">J'accepte les conditions générales d'utilisation</span>
-                <input type="checkbox" formControlName="ok" name="switch">
-                <span class="el-switch-style"></span>
+                <span style="margin-left:10px; font-size:15px;">Accepter les conditions générales d'utilisation</span>
+                <!-- <input type="checkbox" formControlName="ok" name="switch"> -->
+               <!--  <span class="el-switch-style"></span> -->
               </label>
-
             </div>
           </form>
         </div>
       </div>
-
-
     </div>
   </div>
 </ion-content>

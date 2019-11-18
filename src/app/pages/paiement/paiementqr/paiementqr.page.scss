@@ -1,0 +1,150 @@
+#content{
+    height:100%;
+  }
+  #page{
+    display:flex;
+    flex-direction: column;
+    width:100%;
+    height:100%;
+  }
+  .flex1{
+    height:58%;
+  }
+  .flex2{
+    height:42%;
+    background: #f2f2f2
+  }
+  .flex3{
+    height:60px !important;
+    background: #659cd5;
+    border: 0.6px solid #ccc
+  }
+  .flexcenter{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #logo{
+    width:100%;
+    text-align:center;
+    margin-bottom:18px !important;
+  }
+  #codepin span{
+    font-size:16px;
+    color:#747474;
+    display:inline-block;
+    width:100%;
+    text-align:center;
+  }
+  #compte{
+    color:#2c5aa3;
+    text-align:center;
+    font-size:12px;
+  }
+  #compte a,
+  #compte a:hover,
+  #compte a:active,
+  #compte a:link,
+  #compte a:visited{
+    font-weight:bold;
+    text-decoration:underline;
+    color:#2c5aa3;
+  }
+  #pinvalue{
+    width:100%;
+    text-align:center;
+    margin:15px 0 15px 0 !important;
+  }
+  #pinvalue div{
+    width:40px;
+    display:inline-block;
+    padding-bottom:5px;
+    border:0;
+    border-bottom:2px solid #e2e2e2;
+    margin:0 8px;
+    background: none;
+    height:20px;
+    font-size:28px;
+    vertical-align: top;
+    position: relative;
+  }
+  #pinvalue div em
+  {
+    width:0px;
+    border-bottom:2px solid #2c5aa3;
+    position:absolute;
+    bottom:-1.5px;
+    left:0;
+  
+    margin:0;
+    opacity: 0;
+    -webkit-transition: width 0.3s; // For Safari 3.1 to 6.0 /
+    transition: width 0.3s;
+  }
+  #pinvalue div.active{
+    border-bottom:0;
+  }
+  #pinvalue div.active em{
+    opacity: 1;
+    width:100%;
+  }
+  #clavier{
+    width:90%;
+    height:95%;
+    padding-top: 8px;
+  }
+  #clavier .number{
+    margin: 0% 1.5%;
+    width:30.33%;
+    height:25%;
+    float:left;
+  }
+  #clavier .number button{
+    background:#fff;
+    border:0;
+    text-align:center;
+    width:100%;
+    height:80%;
+    color:#898989;
+    font-size:18px;
+  
+  }
+  #clavier .number button.nobg{
+    background:none;
+  }
+  #clavier .number button.okbtn{
+    background: none;
+    color: #757575;
+  }
+  #touch{
+    text-align:center;
+  }
+  #touch span{
+    text-align:center;
+    color:#fff;
+    display:block;
+    width:100%;
+    font-size:10px;
+    margin-top:8px;
+  }
+  
+  #pinvalue div.active span::after{
+    content: "*";
+  }
+  
+  #pinvalue div.active span{
+    color:#2c5aa3;
+  }
+  
+  button{
+    outline: none;
+  }
+  
+  .cadre{
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+  }

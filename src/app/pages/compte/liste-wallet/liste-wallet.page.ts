@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { ServiceService } from 'src/app/services/service.service';
 import { SQLiteObject } from '@ionic-native/sqlite/ngx';
+import { GlobalVariableService } from 'src/app/services/global-variable.service';
 
 @Component({
   selector: 'app-liste-wallet',
@@ -11,7 +12,7 @@ import { SQLiteObject } from '@ionic-native/sqlite/ngx';
 export class ListeWalletPage implements OnInit {
   public headerTitle = 'Mes Wallets';
   wallets: any[];
-  constructor(public navCtrl: NavController,
+  constructor(public navCtrl: NavController, private glb: GlobalVariableService,
               public serv: ServiceService) { }
 
   ngOnInit() {
@@ -26,11 +27,11 @@ export class ListeWalletPage implements OnInit {
 
   getfavoris() {
     this.wallets = [];
-    this.serv.getDataBase()
-    .then((db: SQLiteObject) => {
-      const sql = 'select * from wallet ';
-      const values = [];
-      db.executeSql(sql, values)
+/*     this.serv.getDataBase()
+    .then((db: SQLiteObject) => { */
+    const sql = 'select * from wallet ';
+    const values = [];
+    this.glb.LITEDB.executeSql(sql, values)
         .then((data) => {
           if (data.rows.length > 0) {
             for (let i = 0; i < data.rows.length; i++) {
@@ -42,8 +43,8 @@ export class ListeWalletPage implements OnInit {
 
           })
         .catch(e => {});
-    })
-    .catch(e => {});
+/*     })
+    .catch(e => {}); */
 
   }
 }

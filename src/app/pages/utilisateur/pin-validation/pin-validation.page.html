@@ -6,32 +6,39 @@
       <div class="flexcenter bgcolorwhite" *ngIf="commingData">
         <div id="message">
           <span *ngIf="commingData.type=='recharge'">
-                      Vous allez recharger la somme de <strong>{{commingData.montant}} F</strong> sur le numéro
-          <span id="valeurmsg"><span *ngIf="commingData.nameContact!=''"> de {{commingData.nameContact}} </span>{{commingData.telephone}} <br>
-          <span *ngIf="commingData.frais">Dont frais: {{commingData.frais}} F</span> 
-         </span>
+            Vous allez recharger la somme de <strong>{{commingData.montant}} F</strong> sur le numéro
+            <span id="valeurmsg"><span *ngIf="commingData.nameContact!=''"> de {{commingData.nameContact}}
+              </span>{{commingData.telephone}} <br>
+              <span *ngIf="commingData.frais">Dont frais: {{commingData.frais}} F</span>
+            </span>
           </span>
           <span *ngIf="commingData.type=='retrait'">
-              Vous allez retirer la somme de <strong>{{commingData.montant}} F</strong> sur votre compte
-  <span id="valeurmsg"><span *ngIf="commingData.nameContact!=''"> de {{commingData.nameContact}} </span>{{commingData.telephone}} <br>
-  <span *ngIf="commingData.frais">Dont frais: {{commingData.frais}} F</span> 
- </span>
-  </span>
+            Vous allez retirer la somme de <strong>{{commingData.montant}} F</strong> sur votre compte
+            <span id="valeurmsg"><span *ngIf="commingData.nameContact!=''"> de {{commingData.nameContact}}
+              </span>{{commingData.telephone}} <br>
+              <span *ngIf="commingData.frais">Dont frais: {{commingData.frais}} F</span>
+            </span>
+          </span>
           <span *ngIf="commingData.type=='facture'">
-              Vous allez payer la somme de <strong>{{commingData.montant}} F</strong> pour la facture {{commingData.operateur}} <br>
-          <span id="valeurmsg">{{commingData.label}}: {{commingData.reference}} <br>
-         <span *ngIf="commingData.numfact"> Num: {{commingData.numfact}} <br></span>
-          Client: {{commingData.nameContact}}</span> 
-  </span>
-  <span *ngIf="commingData.type=='reception'">
-      Vous allez receptionner sur votre compte Upay la somme de  <strong>{{commingData.montant}} F</strong> <br>
-  <span id="valeurmsg">Expediteur: {{commingData.nomexp}} <br>
-  Telephone   : {{commingData.telephone}} <br>
-  Source   : {{commingData.operateur}}<br>
-  Destination : {{commingData.destination}}
-</span> 
-  </span>
-
+            Vous allez payer la somme de <strong>{{commingData.montant}} F</strong> pour la facture
+            {{commingData.operateur}} <br>
+            <span id="valeurmsg">{{commingData.label}}: {{commingData.reference}} <br>
+              <span *ngIf="commingData.numfact"> Num: {{commingData.numfact}} <br></span>
+              Client: {{commingData.nameContact}}</span>
+          </span>
+          <span *ngIf="commingData.type=='reception'">
+            Vous allez receptionner sur votre compte Upay la somme de <strong>{{commingData.montant}} F</strong> <br>
+            <span id="valeurmsg">Expediteur: {{commingData.nomexp}} <br>
+              Telephone : {{commingData.telephone}} <br>
+              Source : {{commingData.operateur}}<br>
+              Destination : {{commingData.destination}}
+            </span>
+          </span>
+          <span *ngIf="commingData.type=='upay2upay'">
+            Vous allez effectuer un paiement d'un montant de <strong>{{commingData.montant | millier}} XOF</strong> vers
+            {{commingData.prenom}} {{commingData.nom}}  numéro
+            <strong>{{commingData.telephone}}</strong> <br>
+          </span>
 
         </div>
       </div>
@@ -41,10 +48,10 @@
             <span>Entrer votre code pin</span>
           </div>
           <div id="pinvalue">
-            <div [class.active] = "pin.length>0" class="pin1"><span></span><em></em></div>
-            <div [class.active] = "pin.length>1" class="pin1"><span></span><em></em></div>
-            <div [class.active] = "pin.length>2" class="pin1"><span></span><em></em></div>
-            <div [class.active] = "pin.length>3" class="pin1"><span></span><em></em></div> 
+            <div [class.active]="pin.length>0" class="pin1"><span></span><em></em></div>
+            <div [class.active]="pin.length>1" class="pin1"><span></span><em></em></div>
+            <div [class.active]="pin.length>2" class="pin1"><span></span><em></em></div>
+            <div [class.active]="pin.length>3" class="pin1"><span></span><em></em></div>
           </div>
         </div>
       </div>
@@ -52,17 +59,23 @@
 
         <div id="clavier">
           <div class="number" *ngFor=" let nb of numbersTabs; let i=index">
-            <button  (click)="presse(nb)" id="num1">{{nb}}</button>
+            <button (click)="presse(nb)" id="num1" >
+              {{nb}}
+            </button>
           </div>
           <div class="number">
-            <button style="font-size: 20px;" (click)="presse('ok')" class="okbtn">OK</button>
-        </div>
-        <div class="number">
-            <button (click)="presse(lastnumber)" id="num9">{{lastnumber}}</button>
-        </div>
-        <div class="number">
-            <button class="nobg" (click)="presse('clear')"> <img style="height: 20px" src="assets/images/delete.png"/></button>
-        </div>
+            <button style="font-size: 20px;" (click)="presse('ok')" >OK</button>
+          </div>
+          <div class="number">
+            <button (click)="presse(lastnumber)" id="num9" >
+              {{lastnumber}}
+            </button>
+          </div>
+          <div class="number">
+            <button class="nobg" (click)="presse('clear')" >
+              <img style="height: 20px" src="assets/images/delete.png" />
+            </button>
+          </div>
         </div>
       </div>
 
