@@ -59,7 +59,7 @@ export class PaiementqrPage implements OnInit {
         const dateGeneration = new Date();
         const objetMarchand = {
           montantPaiement: this.montant,
-          telephoneMarchand: this.glb.PHONE,
+          telephoneMarchand: '221' + this.glb.PHONE,
           prenom: this.glb.PRENOM,
           nom: this.glb.NOM,
           dateGeneration
