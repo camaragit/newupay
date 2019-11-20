@@ -27,7 +27,6 @@ export class TransfertUniteValeurPage implements OnInit {
   public rechargeForm: FormGroup;
   ismodal;
   showtelephonedebit = false;
-  // private listeServiceDisponible = ['0005',  '0057', '0053'];
   private listeServiceDisponible = ['0022', '0054', '0005'];
   constructor(public androidPermissions: AndroidPermissions,
               public platform: Platform,
@@ -48,11 +47,10 @@ export class TransfertUniteValeurPage implements OnInit {
     });
     this.glb.isUSSDTriggered = false;
     this.showtelephonedebit = true;
-    this.rechargeForm.addControl('telephone', new FormControl(''));
+    this.rechargeForm.addControl('telephone', new FormControl('', Validators.required));
 
   }
   changementSource() {
-    // this.rechargeForm.removeControl('telephone');
     const oper = ['0022','0005',  '0054'];
     if (oper.includes(this.rechargeForm.controls.service.value)) {
       this.showtelephonedebit = true;
