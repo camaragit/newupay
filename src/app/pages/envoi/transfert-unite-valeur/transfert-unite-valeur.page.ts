@@ -47,13 +47,13 @@ export class TransfertUniteValeurPage implements OnInit {
       sousop: ['']
     });
     this.glb.isUSSDTriggered = false;
-    this.showtelephonedebit = false;
+    this.showtelephonedebit = true;
     this.rechargeForm.addControl('telephone', new FormControl(''));
 
   }
   changementSource() {
     // this.rechargeForm.removeControl('telephone');
-    const oper = ['0022',  '0054'];
+    const oper = ['0022','0005',  '0054'];
     if (oper.includes(this.rechargeForm.controls.service.value)) {
       this.showtelephonedebit = true;
       this.rechargeForm.addControl('telephone', new FormControl('', Validators.required));
@@ -483,7 +483,7 @@ export class TransfertUniteValeurPage implements OnInit {
       }
       case '0005': {
 
-        this.lancementussd(service);
+        this.initieroperation(service);
         break;
       }
       case '0054': {
