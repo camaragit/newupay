@@ -29,7 +29,6 @@ import { Contacts } from '@ionic-native/contacts/ngx';
 import {FilePath} from '@ionic-native/file-path/ngx';
 import { OperatorImagePipe } from './pipes/operator-image.pipe';
 import { FormatcodePipe } from './pipes/formatcode.pipe';
-import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { SharedModule } from './shared/shared.module';
 import { CallNumber } from '@ionic-native/call-number/ngx';
 import { AppVersion } from '@ionic-native/app-version/ngx';
@@ -45,7 +44,7 @@ import { Clipboard } from '@ionic-native/clipboard/ngx';
   entryComponents: [],
   imports: [BrowserModule,  IonicModule.forRoot(), SharedModule, AppRoutingModule, IonicStorageModule.forRoot()],
   providers: [
-    StatusBar, SQLite, Toast,  Sim, Network, OperatorImagePipe, LocalNotifications, CallNumber,
+    StatusBar, SQLite, Toast,  Sim, Network, OperatorImagePipe, CallNumber,
     SplashScreen, GlobalVariableService, Camera, Base64, ServiceService, QrService, HTTP, Contacts, FilePath, FormatcodePipe,
     MillierPipe, FormatphonePipe, AndroidPermissions,  FormatdatePipe, CoupurechainePipe, BarcodeScanner,
     AppVersion, CodePush, OneSignal, CheckService, InAppBrowser, SQLitePorter, Clipboard,

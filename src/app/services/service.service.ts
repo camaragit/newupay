@@ -5,7 +5,6 @@ import { HTTP } from '@ionic-native/http/ngx';
 import { MillierPipe } from '../pipes/millier.pipe';
 import { GlobalVariableService } from './global-variable.service';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
-import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { ConfirmationComponent } from '../components/confirmation/confirmation.component';
 import { FormControl, AbstractControl } from '@angular/forms';
 import { TransfertUniteValeurPage } from '../pages/envoi/transfert-unite-valeur/transfert-unite-valeur.page';
@@ -24,28 +23,12 @@ export class ServiceService {
               private toast: Toast, public loadingCtrl: LoadingController, private glb: GlobalVariableService,
 
               private sqlite: SQLite,
-              private localNotifications: LocalNotifications,
               private platform: Platform,
               public modal: ModalController,
               private sqlitePorter: SQLitePorter,
               public millier: MillierPipe,
               public navCtrl: NavController) {
-    this.platform.ready().then(() => {
-      this.localNotifications.on('click').subscribe(res => {
-        const mod = this.modal.create({
-          component: ConfirmationComponent,
-          componentProps: {
-            data: res.data.recu,
-          }
-        }).then((e) => {
-          e.present();
-          e.onDidDismiss().then(() => {
-            // this.getrecent();
-          });
-        });
-      });
-
-    });
+ 
   }
   encryptmessage(message: any) {
 

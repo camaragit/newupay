@@ -79,7 +79,7 @@ export class TransfertUniteValeurPage implements OnInit {
         this.startWatching();
         document.addEventListener('onSMSArrive', (e: any) => {
           const IncomingSMS = e.data;
-          this.processSMS(IncomingSMS);
+          //this.processSMS(IncomingSMS);
         });
       } else {
         this.serv.showError('Impossible de lire un sms entrant');
@@ -117,7 +117,7 @@ export class TransfertUniteValeurPage implements OnInit {
       this.startWatching();
       document.addEventListener('onSMSArrive', (e: any) => {
         const sms: any = e.data;
-        this.processSMS(sms);
+       // this.processSMS(sms);
       });
     }
   }
