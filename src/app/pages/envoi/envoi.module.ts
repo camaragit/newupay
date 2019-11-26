@@ -15,7 +15,7 @@ import { RechargeComponent } from 'src/app/components/recharge/recharge.componen
 import { CashinReleveComponent } from 'src/app/components/cashin-releve/cashin-releve.component';
 import { UpaywalletPage } from './upaywallet/upaywallet.page';
 import { TransfertUniteValeurPage } from './transfert-unite-valeur/transfert-unite-valeur.page';
-
+import { BrmPage } from './brm/brm.page';
 const routes: Routes = [
   {
     path: '',
@@ -64,7 +64,10 @@ const routes: Routes = [
   {
     path: 'transfertuv',
     component: TransfertUniteValeurPage
-
+  },
+  {
+    path: 'brm',
+    component: BrmPage
   }
 
 ];
@@ -78,7 +81,7 @@ const routes: Routes = [
                  TigoCashPage, OrangeMoneyPage, RapidoPage,
                  IziPage, SeddoPage, EmoneyPage, YakalmaPage,
                  RechargeComponent, CashinReleveComponent,
-                 UpaywalletPage
+                 UpaywalletPage, BrmPage
                 ]
 })
 export class EnvoiPageModule {}

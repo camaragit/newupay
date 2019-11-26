@@ -1,15 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="atps.africa.upaymobile" version="1.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="atps.africa.upaymobiletest" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <platform name="android">
-        <preference name="APP_SECRET" value="8064e6cc-393d-4c53-82b3-c7fcd6c2c288" />
     </platform>
     <platform name="android">
-        <preference name="CodePushDeploymentKey" value="MG5HRILqcFuQLALmbXCkMrdPca3yvGDgb_zkA" />
+        <preference name="CodePushDeploymentKey" value="MG5HRILqcFuQLALmbXCkMrdPca3yvGDgb_zkATEST" />
     </platform>
     <platform name="android">
         <hook src="hooks/copy_android_notification_icons.js" type="after_prepare" />
     </platform>
-    <name>UPay Africa</name>
+    <name>UPay Africa Test</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework.com" href="http://ionicframework.com/">Ionic Framework Team</author>
     <content src="index.html" />

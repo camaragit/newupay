@@ -11,7 +11,7 @@ export class PubliciteComponent implements OnInit {
   message: any;
 
   constructor(public navParams: NavParams, private modalCrtl: ModalController) {
-    this.message = this.navParams.data.val.notification.payload;
+    this.message = this.navParams.data.val;
   }
   ngOnInit() {}
 

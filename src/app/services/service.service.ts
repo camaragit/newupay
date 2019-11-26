@@ -394,6 +394,12 @@ export class ServiceService {
           this.loading = null;
         } */
   }
+  get(service: string, parametres: any= {}, headers: any = {}){
+    this.http.setDataSerializer('json');
+    this.http.setSSLCertMode('nocheck');
+    this.http.setRequestTimeout(90);
+    return this.http.get(service, parametres, headers);
+  }
   posts(service: string, body: any = {}, headers: any = {}): any {
     body.numerocompte = this.glb.HEADER.agence * 1;
     if (this.glb.ISCONNECTED === false) {

@@ -5,7 +5,6 @@ import { RouteReuseStrategy } from '@angular/router';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { GlobalVariableService } from './services/global-variable.service';
@@ -39,6 +38,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { QrService } from './services/qr.service';
 import { Clipboard } from '@ionic-native/clipboard/ngx';
+import { ReplaceStringPipe } from './pipes/replace-string.pipe';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -47,7 +47,7 @@ import { Clipboard } from '@ionic-native/clipboard/ngx';
     StatusBar, SQLite, Toast,  Sim, Network, OperatorImagePipe, CallNumber,
     SplashScreen, GlobalVariableService, Camera, Base64, ServiceService, QrService, HTTP, Contacts, FilePath, FormatcodePipe,
     MillierPipe, FormatphonePipe, AndroidPermissions,  FormatdatePipe, CoupurechainePipe, BarcodeScanner,
-    AppVersion, CodePush, OneSignal, CheckService, InAppBrowser, SQLitePorter, Clipboard,
+    AppVersion, CodePush, OneSignal,ReplaceStringPipe, CheckService, InAppBrowser, SQLitePorter, Clipboard,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

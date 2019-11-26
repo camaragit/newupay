@@ -29,7 +29,7 @@ const routes: Routes = [
   {
     path: 'acceuil',
     component: AcceuilPage,
-    canActivate: [AccessGuard]
+   /*  canActivate: [AccessGuard] */
   },
   {
     path: 'bienvenue',

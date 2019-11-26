@@ -39,6 +39,11 @@
             {{commingData.prenom}} {{commingData.nom}}  numéro
             <strong>{{commingData.telephone}}</strong> <br>
           </span>
+          <span *ngIf="commingData.type=='depot'">
+              Vous allez effectuer un depôt bancaire sur compte N°<strong>{{commingData.telephone}} </strong> pour
+              {{commingData.prenom}} {{commingData.nom}}  d'un montant de 
+              <strong>{{commingData.montant | millier}} XOF</strong> <br>
+            </span>
 
         </div>
       </div>

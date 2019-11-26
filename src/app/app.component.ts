@@ -52,6 +52,7 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
+      
       this.platform.backButton.subscribeWithPriority(0, () => {
       console.log('mode qr ' + this.glb.qrcmode);
       if (!this.glb.qrcmode) {

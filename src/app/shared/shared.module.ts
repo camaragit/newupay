@@ -19,10 +19,11 @@ import { MessageComponent } from '../components/message/message.component';
 import { PubliciteComponent } from '../components/publicite/publicite.component';
 import { TransfertUniteValeurPage } from '../pages/envoi/transfert-unite-valeur/transfert-unite-valeur.page';
 import { ReglecguComponent } from '../components/reglecgu/reglecgu.component';
+import { ReplaceStringPipe } from '../pipes/replace-string.pipe';
 
 @NgModule({
   declarations: [FooterComponent, HeaderComponent, FormatcodePipe, OperatorImagePipe,
-                 ContentmenuComponent, MillierPipe, FormatphonePipe,  FormatdatePipe,
+                 ContentmenuComponent, MillierPipe, FormatphonePipe,  FormatdatePipe, ReplaceStringPipe,
                  CoupurechainePipe, PinValidationPage, ConfirmationComponent, PopoverContactComponent,
                  MessageComponent, PubliciteComponent, ReglecguComponent, TransfertUniteValeurPage],
   imports: [
@@ -46,6 +47,7 @@ import { ReglecguComponent } from '../components/reglecgu/reglecgu.component';
             FormsModule,
             IonicModule,
             FormatcodePipe,
+            ReplaceStringPipe,
             NgxMaskModule,
             ReactiveFormsModule,
             MessageComponent,

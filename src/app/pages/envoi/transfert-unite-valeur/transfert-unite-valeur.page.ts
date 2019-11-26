@@ -413,6 +413,9 @@ export class TransfertUniteValeurPage implements OnInit {
     this.glb.isUSSDTriggered = false;
     this.montantreleve = '';
     this.rechargeForm.controls.service.setValue('0005');
+    this.rechargeForm.controls.telephone.setValue('');
+    this.showtelephonedebit = true;
+    this.rechargeForm.addControl('telephone', new FormControl('', Validators.required));
     this.restartWatching();
   }
   initier() {
@@ -524,6 +527,7 @@ export class TransfertUniteValeurPage implements OnInit {
 
   }
 lancementussd(service) {
+  
  // setTimeout(() => {
     const reference = this.serv.generateUniqueId();
     // tslint:disable-next-line: max-line-length
@@ -531,6 +535,7 @@ lancementussd(service) {
     const commandetigo = '#150*4*6*' + this.glb.ATPS_TIGO_IDMERCHAND + '*' + reference + '*' + mnt + '#';
     const commandeOrange = '#144#5*' + this.glb.ATPS_OM_IDMERCHAND + '*' + mnt + '#';
     const commandeEmoney = '#444*3*1*' + this.glb.ATPS_EM_IDMERCHAND + '*' + mnt + '#';
+    this.reinit();
     /* const commandetigo   = '#150*4*6*' + this.glb.ATPS_TIGO_IDMERCHAND + '*' + reference + '*1#';
        const commandeOrange = '#144#5*' + this.glb.ATPS_OM_IDMERCHAND + '*10#';
        const commandeEmoney = '#444*3*1*' + this.glb.ATPS_EM_IDMERCHAND + '*100#';*/

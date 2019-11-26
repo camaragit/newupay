@@ -34,6 +34,7 @@ export class EnvoiPage implements OnInit {
   //{image: this.glbVariable.IMG_URL + 'logo_Expresso.png', libelle: '', chemin: 'envoi/yakalma'},
   //{image: this.glbVariable.IMG_URL + 'logo_rapido.png', libelle: '', chemin: 'envoi/rapido'},
   {image: this.glbVariable.IMG_URL + 'upayv2.png', libelle: '', chemin: 'envoi/upaywallet'},
+  {image: this.glbVariable.IMG_URL + 'brm.png', libelle: '', chemin: 'envoi/brm'}
   //{image: this.glbVariable.IMG_URL + 'homereception.png', libelle: 'MOGA', chemin: 'envoi/transfertuv'},
 ];
   }

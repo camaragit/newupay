@@ -78,8 +78,6 @@ export class RechargeComponent implements OnInit {
   }
   getrecent() {
     this.recentsContacts = [];
-    /* this.serv.getDataBase()
-      .then((db: SQLiteObject) => { */
     const sql = 'select * from recents where codeoperateur=? and sousoperateur =? and numcompte=? order by datemisajour desc limit 5';
     const values = [this.datarecharge.codeOperateur, this.datarecharge.sousoperateur, this.glb.NUMCOMPTE];
     this.glb.LITEDB.executeSql(sql, values)
@@ -89,9 +87,6 @@ export class RechargeComponent implements OnInit {
             }
           })
           .catch(e => { });
-  /*     })
-      .catch(e => { }); */
-
   }
   changemontant() {
 

@@ -82,6 +82,7 @@ export class UtilisateurPage implements OnInit {
       this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.Notification);
 
       this.oneSignal.handleNotificationReceived().subscribe((data) => {
+        console.log(data);
         const notificationData = data.payload;
         const notification: any = {};
         notification.titre = notificationData.title;
@@ -91,6 +92,10 @@ export class UtilisateurPage implements OnInit {
         console.log(JSON.stringify(notification));
         this.glb.nombreNotif += 1;
         this.serv.insertnotification(notification);
+        if(notificationData.additionalData && notificationData.additionalData.type && notificationData.additionalData.type === 'credit'){
+          const type = 'received'
+          this.presentModal(data, type);
+        }
       });
 
       this.oneSignal.handleNotificationOpened().subscribe((data) => {
@@ -123,10 +128,12 @@ export class UtilisateurPage implements OnInit {
       }
     });
   }
-  async presentModal(data: any) {
+  async presentModal(data: any, type: any ='') {
+    console.log('je suis dans present '+JSON.stringify(data));
+    const params = type === 'received' ? data.payload : data.notification.payload;
     const modal = await this.modalCrtl.create({
-      component: data.notification.payload.bigPicture ? PubliciteComponent : MessageComponent,
-      componentProps: {val: data},
+      component: params.bigPicture ? PubliciteComponent : MessageComponent,
+      componentProps: {val: params},
       cssClass: 'test'
     });
     return await modal.present();

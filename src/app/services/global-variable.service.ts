@@ -10,6 +10,7 @@ export class GlobalVariableService {
  // public BASEURL = 'http://196.207.207.63:8080/upayMobile/';
   public  URLPROD = 'https://mobile.upay.africa:8080/upayMobile/';
   public URLTEST =  'http://196.207.245.99:8282/upayMobile/';
+  public URLBANQUE = 'http://192.168.4.63/api/banque/';
   public BASEURL =  '';
   public IDPART = '';
   public IDSESS = '';
