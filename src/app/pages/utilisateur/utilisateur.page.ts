@@ -75,8 +75,9 @@ export class UtilisateurPage implements OnInit {
     });
     this.platform.ready().then(() => {
       setTimeout(() => {
+        console.log('base ',this.glb.LITEDB)
         this.serv.createDataBase();
-      }, 100);
+      }, 2000);
       this.oneSignal.startInit(this.glb.onesignalAppIdProd, this.glb.firebaseID);
 
       this.oneSignal.inFocusDisplaying(this.oneSignal.OSInFocusDisplayOption.Notification);
@@ -93,7 +94,7 @@ export class UtilisateurPage implements OnInit {
         this.glb.nombreNotif += 1;
         this.serv.insertnotification(notification);
         if(notificationData.additionalData && notificationData.additionalData.type && notificationData.additionalData.type === 'credit'){
-          const type = 'received'
+          const type = 'received';
           this.presentModal(data, type);
         }
       });
@@ -129,7 +130,6 @@ export class UtilisateurPage implements OnInit {
     });
   }
   async presentModal(data: any, type: any ='') {
-    console.log('je suis dans present '+JSON.stringify(data));
     const params = type === 'received' ? data.payload : data.notification.payload;
     const modal = await this.modalCrtl.create({
       component: params.bigPicture ? PubliciteComponent : MessageComponent,
@@ -216,7 +216,9 @@ export class UtilisateurPage implements OnInit {
                       this.oneSignal.sendTags({compte: this.glb.HEADER.agence, telephone: this.glb.PHONE,
                         numeropiece: reponse.numpiece, prenom: reponse.prenom, nom: reponse.nom});
                       if (typeof(reponse.mntPlf) !== 'object') {
-                        this.glb.HEADER.montant = this.monmillier.transform(reponse.mntPlf);
+                        let  plf: any = reponse.mntPlf * 1 - reponse.consome * 1;
+                        plf += '';
+                        this.glb.HEADER.montant = this.monmillier.transform(plf);
                       } else { this.glb.HEADER.montant = '0'; }
                       this.glb.dateUpdate = this.serv.getCurrentDate();
                       this.glb.HEADER.numcompte = reponse.numcompte;
@@ -232,14 +234,14 @@ export class UtilisateurPage implements OnInit {
                 }
               }
               } else {
-                this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard' );
+                this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
               }
 
             }).catch(error => {
               this.serv.dismissloadin();
 
-              this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard ');
-
+              this.serv.showError('Le service est momentanément indisponible.Veuillez réessayer plutard');
+              console.log(JSON.stringify(error));
 
             });
 

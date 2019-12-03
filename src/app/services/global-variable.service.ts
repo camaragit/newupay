@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SQLiteObject } from '@ionic-native/sqlite/ngx';
+import { InstallMode } from '@ionic-native/code-push/ngx';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ export class GlobalVariableService {
  // public BASEURL = 'http://196.207.207.63:8080/upayMobile/';
   public  URLPROD = 'https://mobile.upay.africa:8080/upayMobile/';
   public URLTEST =  'http://196.207.245.99:8282/upayMobile/';
+  // public URLTEST =  'http://172.30.4.216/getiwebservice/atpswebservice/upayMobile/';
   public URLBANQUE = 'http://192.168.4.63/api/banque/';
   public BASEURL =  '';
   public IDPART = '';
@@ -49,6 +51,19 @@ export class GlobalVariableService {
   PHONE: any = '775067661';
   USERID: any = '';
   nombreNotif = 0;
+  SYNCOPTIONS: any = {updateDialog:
+                                          // tslint:disable-next-line: max-line-length
+                                          {mandatoryUpdateMessage: ' Une mise à jour est disponible. l\'installation requiert de redemarrer l\'application',
+                                          // tslint:disable-next-line: max-line-length
+                                          optionalUpdateMessage: ' Une mise à jour est disponible. l\'installation requiert de redemarrer l\'application',
+                                          updateTitle: 'UPAY AFRICA',
+                                          optionalInstallButtonLabel: 'Installer',
+                                          mandatoryContinueButtonLabel: 'Installer',
+                                          appendReleaseDescription: false,
+                                          optionalIgnoreButtonLabel: 'Ignorer',
+                                          descriptionPrefix: '\nNouveautés:\n',
+                                          },
+                              installMode: InstallMode.IMMEDIATE};
   ONESIGNALHEADER: any = { Authorization: 'Basic ZTc5M2U1MzUtNGVlZC00NjdjLTgwNjUtZjE1ZjkyYWJmZjY4'};
   onesignalAppIdProd = '04ec581b-a5f2-4e40-ac76-8c7c02fda21c';
   onesignalAppIdTest = '04ec581b-a5f2-4e40-ac76-8c7c02fda21c';

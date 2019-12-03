@@ -26,9 +26,9 @@ filterdate: any;
   ngOnInit() {
   }
   details(trx: any) {
-    // alert(JSON.stringify(trx))
+   // alert(JSON.stringify(trx));
     trx.data = trx.data == null ? '' : trx.data;
-    if (trx.data !== '') {
+    if (trx.data !== '' ) {
       const recu = JSON.parse(trx.data);
       recu.mode = 'reçu';
       const mod = this.modalctrl.create({
@@ -51,7 +51,7 @@ filterdate: any;
       data.notification.payload.bigPicture = trx.image;
       const modal = this.modalctrl.create({
         component: trx.image !== '' ? PubliciteComponent : MessageComponent,
-        componentProps: {val: data},
+        componentProps: {val: data.notification.payload},
         cssClass: 'test'
       }).then((e) => {
         e.present();

@@ -8,10 +8,11 @@ import { ServiceService } from './services/service.service';
 import { GlobalVariableService } from './services/global-variable.service';
 import { Router, NavigationExtras } from '@angular/router';
 import { AppVersion } from '@ionic-native/app-version/ngx';
-import { CodePush } from '@ionic-native/code-push/ngx';
+import { CodePush, SyncStatus } from '@ionic-native/code-push/ngx';
 import { Network } from '@ionic-native/network/ngx';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { ReglecguComponent } from './components/reglecgu/reglecgu.component';
+import { SQLiteObject } from '@ionic-native/sqlite/ngx';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html'
@@ -52,7 +53,10 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
-      
+      this.serv.getDataBase().then((db: SQLiteObject) => {
+        this.glb.LITEDB = db;
+        console.log('creation db ok ', db)
+      }).catch(err => {console.log('err db ', err); });
       this.platform.backButton.subscribeWithPriority(0, () => {
       console.log('mode qr ' + this.glb.qrcmode);
       if (!this.glb.qrcmode) {
@@ -71,7 +75,11 @@ export class AppComponent {
       });
       this.appVersion.getPackageName().then((val) => {
         if (val === this.glb.prodpackageName) {
-        this.codepush.sync().subscribe(() => {});
+/*         this.codepush.sync(this.glb.SYNCOPTIONS).subscribe((status) => {
+          if (status === SyncStatus.UPDATE_INSTALLED) {
+            this.serv.showToast('Mise à jour reussie. L\'application va maintenant redemarrer');
+          }
+        }); */
         }
       });
 
@@ -81,7 +89,12 @@ export class AppComponent {
       this.platform.resume.subscribe(() => {
         this.appVersion.getPackageName().then((val) => {
           if (val === this.glb.prodpackageName) {
-          this.codepush.sync().subscribe(() => {});
+/*            this.codepush.sync(this.glb.SYNCOPTIONS).subscribe((status) => {
+            if (status === SyncStatus.UPDATE_INSTALLED) {
+              this.serv.showToast('Mise à jour reussie. L\'application va maintenant redemarrer');
+            }
+
+           }); */
           }
         });
         this.glb.DATEREPRISE = new Date();
@@ -102,7 +115,6 @@ export class AppComponent {
       });
       this.statusBar.backgroundColorByHexString('#2c5aa3');
       this.splashScreen.hide();
-      this.serv.getDataBase();
       window.addEventListener('keyboardDidHide', () => {
         this.glb.showheader = true;
       });

@@ -1,8 +1,44 @@
 <app-header [headerTitle]="headerTitle"></app-header>
 <ion-content>
-    <div class="bodycontent" style="display: flex;justify-content: center;align-items: center;flex-direction: column">
-      <img src="assets/images/wait.png" alt="" style="width: 25%">
-      <p style="font-size: 24px;color:#2c5aa3;">Bientôt disponible</p>
+  <div class="bodycontent">
+    <div style="justify-content:center;padding: 10px;padding-left: 5px;padding-right: 5px ;width:100%;flex-wrap: wrap;">
+      <div *ngIf="comptes.length > 0" class="titrehistorique" style="align-items: center; font-size: 18px;">Comptes Bancaires</div>
+      <div  class = "ligne" style="display: flex;" *ngFor="let cpt of comptes"  >
+        <div class="ligneitemfirst" style="align-items: center;border-left: 5px solid green;background: #f6fbf3;">
+          <img style="width: 70%" src="assets/images/brm.png" alt="">
+        </div>
+<!--         <div class="ligneitem">
+          <span  class="ligneitem1" style="text-transform: uppercase" >PAYS</span>
+          <span  class="ligneitem2" >SENEGAL</span>
+        </div> -->
+         <div class="ligneitem">
+          <span  class="ligneitem1" style="text-transform: uppercase" >BANQUE</span>
+          <span  class="ligneitem2" >{{cpt.nombanque}}</span>
+        </div>
+        <div class="ligneitem">
+          <span  class="ligneitem1" style="text-transform: uppercase" >COMPTE</span>
+          <span  class="ligneitem2" >{{cpt.numerocompte}}</span>
+        </div>
+        <div class="ligneitem">
+          <span  class="ligneitem1" style="text-transform: uppercase" >BENEF</span>
+          <span  class="ligneitem2" >{{cpt.prenombeneficiaire}} {{cpt.nombeneficiaire}}</span>
+        </div>
+
+         <div class="ligneitem">
+          <span (click)="gotoupdate(cpt)"><ion-icon style="color:#2C5AA3; width: 60% !important; margin-left: 6px;margin-top: 30px;"  size="large" name="create"></ion-icon></span>
+          <span (click)="presentAlert('delete',cpt)"><ion-icon style="color:#2C5AA3; width: 60% !important; margin-left:6px;margin-bottom: 15px;" size="large" name="close"></ion-icon></span>
+        </div>
+
+      </div>
     </div>
-  </ion-content>
+  </div>
+
+  <ion-fab  vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="ajoutBanque()" style="--background: white; --color:#2C5AA3;" >
+      <ion-icon name="add" size="large" ></ion-icon>
+    </ion-fab-button >
+
+  </ion-fab>
+
+</ion-content>
 <app-footer></app-footer>

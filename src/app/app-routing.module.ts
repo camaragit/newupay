@@ -10,7 +10,7 @@ const routes: Routes = [
   { path: 'favoris', loadChildren: './pages/favoris/favoris.module#FavorisPageModule', canActivate: [AccessGuard] },
   { path: 'utilisateur', loadChildren: './pages/utilisateur/utilisateur.module#UtilisateurPageModule'},
   { path: 'historique', loadChildren: './pages/historique/historique.module#HistoriquePageModule', canActivate: [AccessGuard] },
-  { path: 'compte', loadChildren: './pages/compte/compte.module#ComptePageModule', /* canActivate: [AccessGuard] */ }
+  { path: 'compte', loadChildren: './pages/compte/compte.module#ComptePageModule', /* canActivate: [AccessGuard] */ },
   ] ;
 
 @NgModule({

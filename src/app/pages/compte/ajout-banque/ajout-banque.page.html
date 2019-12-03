@@ -1,0 +1,72 @@
+<app-header [headerTitle]="headerTitle"></app-header>
+
+<ion-content><!-- 
+    <form [formGroup]="databank"  class="formulaire" >
+        <div  style="padding: 15px" >
+    
+
+              <div class="formdiv releve">
+                  <label>Nom banque * </label>
+                  <input type="text" formControlName="bank" placeholder="Entrer le nom de la banque ici"/>
+                  <div></div>
+                </div>
+                        
+                <div class="formdiv releve">
+                  <label>Numéro de compte (RIB)  * </label>
+                  <input type="text" [dropSpecialCharacters]="false" mask="AAAAA-00000-0*-00" style="color: black; width: 250px !important;" formControlName="numcompte" placeholder="Saisir le numéro ici"/>
+                  <div></div>
+                </div>
+               
+                <div style="padding: 15px" class="flex2 flexcenter" id="btncontrol">
+                  <button [disabled]="!databank.valid" (click)="inserCompte()" [style.background]="!databank.valid ? '#CFD8DC' : '#074A94'" style="height: 46px;width: 100%;border-radius: 5px;" id="btnsvt" class="btnbleu" >{{btnText}}</button>
+                </div>
+          
+    
+        </div>
+    
+      </form> -->
+      <form [formGroup]="databank"  class="formulaire" >
+        <div  style="padding: 15px" >
+    
+          <div style="display: flex;margin-bottom: 20px;">
+              <div class="formdiv releve customfirst" style="width:85%">
+                  <label>Choisir le pays * </label>
+                  <ion-select (ionChange)="onselectpays()" formControlName="pays" placeholder="Choisir le pays *" interface="popover">
+                    <ion-select-option  *ngFor="let country of codepays">{{country}}</ion-select-option>
+                  </ion-select>
+                  <div></div>
+                </div>
+              <div style="height: 50px;margin-top: 10px;border: 1px solid #b6d3f0;border-radius: 5px;background:#fff;margin-left:10px;padding-left: 10px;padding-right: 10px;display: flex;justify-content: center;align-items:center;width:15%">
+                  <span style="line-height:4em !important; width: 20em !important;" ngClass="flag-icon flag-icon-{{flag | lowercase}}"></span>
+              </div>
+            </div>
+      
+          <div class="formdiv releve">
+            <label>Choisir la banque * </label>
+            <ion-select placeholder="Choisir la banque" (ionChange)="onSelectedBank()" formControlName="nombanque" interface="popover">
+              <ion-select-option value="{{bank.abreviation}}" *ngFor="let bank of banques">{{bank.abreviation}}</ion-select-option>
+            </ion-select>
+            <div></div>
+          </div>
+              <div class="formdiv releve">
+                  <label>Prénom bénéficiaire * </label>
+                  <input type="text" formControlName="prenombeneficiaire" placeholder="Entrer le prénom ici"/>
+                  <div></div>
+                </div>            
+                <div class="formdiv releve">
+                  <label>Nom bénéficiaire * </label>
+                  <input type="text" formControlName="nombeneficiaire" placeholder="Entrer le nom ici"/>
+                  <div></div>
+                </div>            
+                <div class="formdiv releve">
+                  <label>Numéro de compte (RIB) du bénéficiare * </label>
+                  <input type="text" [dropSpecialCharacters]="false" mask="AAAAA-00000-0*-00" style="color: black; width: 250px !important;" formControlName="numerocompte" placeholder="Saisir numéro ici"/>
+                  <div></div>
+                </div>                
+                <div style="padding: 15px" class="flex2 flexcenter" id="btncontrol">
+                  <button [disabled]="!databank.valid" (click)="inserCompte()" [style.background]="!databank.valid ? '#CFD8DC' : '#074A94'" style="height: 46px;width: 100%;border-radius: 5px;" id="btnsvt" class="btnbleu" >{{btnText}}</button>
+                </div>   
+        </div>
+      </form>
+</ion-content>
+<app-footer></app-footer>

@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { FooterComponent } from '../components/footer/footer.component';
 import { HeaderComponent } from '../components/header/header.component';
 import { ContentmenuComponent } from '../components/contentmenu/contentmenu.component';
-import { NgxMaskModule, IConfig } from 'ngx-mask';
+import { NgxMaskModule } from 'ngx-mask';
 import { MillierPipe } from '../pipes/millier.pipe';
 import { FormatphonePipe } from '../pipes/formatphone.pipe';
 import { FormatdatePipe } from '../pipes/formatdate.pipe';

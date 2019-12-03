@@ -7,6 +7,7 @@ import { ListeWalletPage } from './liste-wallet/liste-wallet.page';
 import { AjoutWalletPage } from './ajout-wallet/ajout-wallet.page';
 import { CartePage } from './carte/carte.page';
 import { BanquePage } from './banque/banque.page';
+import { AjoutBanquePage } from './ajout-banque/ajout-banque.page';
 
 const routes: Routes = [
   {
@@ -28,6 +29,10 @@ const routes: Routes = [
   {
     path: 'banque',
     component: BanquePage
+  },
+  {
+    path: 'ajoutbanque',
+    component: AjoutBanquePage
   }
 ];
 
@@ -36,6 +41,6 @@ const routes: Routes = [
     SharedModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ComptePage, ListeWalletPage, AjoutWalletPage, BanquePage, CartePage]
+  declarations: [ComptePage, ListeWalletPage, AjoutWalletPage, BanquePage, CartePage, AjoutBanquePage]
 })
 export class ComptePageModule {}

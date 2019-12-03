@@ -1,4 +1,5 @@
-<ion-content style="--ion-background-color:white" [scrollEvents]="true" (ionScrollStart)="logScrollStart()" (ionScroll)="logScrolling($event)" (ionScrollEnd)="logScrollEnd()">
+<ion-content style="--ion-background-color:white" [scrollEvents]="true" (ionScrollStart)="logScrollStart()"
+  (ionScroll)="logScrolling($event)" (ionScrollEnd)="logScrollEnd()">
   <div id="content" class="flexcenter">
     <div id="page">
       <div class="flex1">
@@ -11,46 +12,52 @@
         <span class="shatop"></span>
       </div>
       <div class="flexible" id="divflexible">
-          <div style="text-align:center;color: #074a94;margin-top: 30px;font-size: 15px;">
-              {{titre}}
-          </div>
+        <div style="text-align:center;color: #074a94;margin-top: 30px;font-size: 15px;">
+          {{titre}}
+        </div>
         <div id="contentform">
-          <form [formGroup]="Userdata" id="souscription_1" class="formulaire" >
+          <form [formGroup]="Userdata" id="souscription_1" class="formulaire">
 
 
-            <div class="formdiv" [style.border-color]="Userdata.controls.prenom.errors && Userdata.controls.prenom.touched ? 'red' : '#578cc9'"  >
+            <div class="formdiv"
+              [style.border-color]="Userdata.controls.prenom.errors && Userdata.controls.prenom.touched ? 'red' : '#578cc9'">
               <label>Prénom (s) *</label>
-              <input type="text"  formControlName="prenom"  placeholder="Ecrivez votre prénom ici" />
+              <input type="text" formControlName="prenom" placeholder="Ecrivez votre prénom ici" />
               <div></div>
             </div>
-            <div class="formdiv" [style.border-color]="Userdata.controls.nom.errors && Userdata.controls.nom.touched ? 'red' : '#578cc9'">
+            <div class="formdiv"
+              [style.border-color]="Userdata.controls.nom.errors && Userdata.controls.nom.touched ? 'red' : '#578cc9'">
               <label>Nom *</label>
               <input type="text" formControlName="nom" placeholder="Ecrivez votre nom ici" />
               <div></div>
             </div>
-            <div class="formdiv" [style.border-color]="Userdata.controls.login.errors && Userdata.controls.login.touched ? 'red' : '#578cc9'">
+            <div class="formdiv"
+              [style.border-color]="Userdata.controls.login.errors && Userdata.controls.login.touched ? 'red' : '#578cc9'">
               <label>Numéro de téléphone *</label>
-              <input type="tel" prefix="+221 " [readOnly]="desactiv" mask="00-000-00-00" formControlName="login" placeholder="Ecrivez N° téléphone ici" />
+              <input type="tel" prefix="+221 " [readOnly]="desactiv" mask="00-000-00-00" formControlName="login"
+                placeholder="Ecrivez N° téléphone ici" />
               <div></div>
             </div>
-            <div class="formdiv" [style.border-color]="Userdata.controls.numpiece.errors && Userdata.controls.numpiece.touched ? 'red' : '#578cc9'">
+            <div class="formdiv"
+              [style.border-color]="Userdata.controls.numpiece.errors && Userdata.controls.numpiece.touched ? 'red' : '#578cc9'">
               <label>Numero piece *</label>
               <input type="text" formControlName="numpiece" placeholder="Ecrivez votre numéro de pièce d'identité" />
               <div></div>
             </div>
-            <div class="formdiv" [style.border-color]="Userdata.controls.email.errors && Userdata.controls.email.touched ? 'red' : '#578cc9'">
+            <div class="formdiv"
+              [style.border-color]="Userdata.controls.email.errors && Userdata.controls.email.touched ? 'red' : '#578cc9'">
               <label>Adresse e-mail *</label>
-              <input type="email"  formControlName="email"  placeholder="Ecrivez votre e-mail" />
+              <input type="email" formControlName="email" placeholder="Ecrivez votre e-mail" />
               <div></div>
             </div>
 
-             <div style="margin-top: 30px;" class="formdiv suppl click">
+            <div style="margin-top: 30px;" class="formdiv suppl click">
               <label for="deplaf">
                 <span (click)="cocher()">Je souhaite déplafonner mon compte maintenant</span>
                 <input type="checkbox" id="deplaf" />
                 <span (click)="cocher()" class="checkmark"></span>
               </label>
-            </div> 
+            </div>
 
             <div [class.active]="coche" class="deplafoncompte">
               <div class="formdiv">
@@ -58,7 +65,7 @@
                 <input type="text" placeholder="Renseigez votre adress ici" />
                 <div></div>
               </div>
-<!--               <div style="margin-bottom: 0px" class="formdiv bordernull">
+              <!--               <div style="margin-bottom: 0px" class="formdiv bordernull">
                 <label>Genre *</label>
                 <div class="genrediv">
                   <label style="margin-bottom: 0px" class="radio">Homme
@@ -72,24 +79,36 @@
 
                 </div>
               </div> -->
-     <!--          <div class="formdiv1">
+              <!--          <div class="formdiv1">
                 <select>
                   <option>Type de piéce *</option>
                   <option>CNI</option>
                 </select>
               </div> -->
               <div style="display: flex; width:100%;justify-content: space-between;">
-                <div class="scandiv" [style.height]="isrecto ? 'auto' : '103px'" [style.background]="isrecto ? 'none' : '#659CD5'" style='width:45%; position: relative;' (click)="takeRecto()">
-                    <div style="position: absolute; ;z-index:999; width:100%; height: 100%;text-align: center; top:0;left: 0;">
-                        <img [src]="pictureRecto"   *ngIf="pictureRecto!=''" style="max-width: 100%;max-height: 100px; height: auto;"  /> 
-                        <span [class.labelPhoto]='isrecto' style="position: absolute; bottom:0px; width: 100%; text-align: center;left: 0;padding: 5px;" >Photographier recto</span>
-                    </div>
-                    <div><img [src]="default" height="45" /></div>
+                <div class="scandiv" [style.height]="isrecto ? 'auto' : '103px'"
+                  [style.background]="isrecto ? 'none' : '#659CD5'" style='width:45%; position: relative;'
+                  (click)="takeRecto()">
+                  <div
+                    style="position: absolute; ;z-index:999; width:100%; height: 100%;text-align: center; top:0;left: 0;">
+                    <img [src]="pictureRecto" *ngIf="pictureRecto!=''"
+                      style="max-width: 100%;max-height: 100px; height: auto;" />
+                    <span [class.labelPhoto]='isrecto'
+                      style="position: absolute; bottom:0px; width: 100%; text-align: center;left: 0;padding: 5px;">Photographier
+                      recto</span>
                   </div>
-                <div class="scandiv" [style.height]="isVerso ? 'auto' : '103px'" [style.background]="isrecto ? 'none' : '#659CD5'" style='width:45%; position: relative;' (click)="takeVerso()">
-                  <div style="position: absolute;z-index:999; width:100%; height: 100%;text-align: center; top:0;left: 0;">
-                      <img [src]="pictureVerso"   *ngIf="pictureVerso!=''" style="max-width: 100%;max-height: 100px; height: auto;"  /> 
-                      <span [class.labelPhoto]='isVerso' style="position: absolute; bottom:0px; width: 100%; text-align: center;left: 0;padding: 5px;" >Photographier verso</span>
+                  <div><img [src]="default" height="45" /></div>
+                </div>
+                <div class="scandiv" [style.height]="isVerso ? 'auto' : '103px'"
+                  [style.background]="isrecto ? 'none' : '#659CD5'" style='width:45%; position: relative;'
+                  (click)="takeVerso()">
+                  <div
+                    style="position: absolute;z-index:999; width:100%; height: 100%;text-align: center; top:0;left: 0;">
+                    <img [src]="pictureVerso" *ngIf="pictureVerso!=''"
+                      style="max-width: 100%;max-height: 100px; height: auto;" />
+                    <span [class.labelPhoto]='isVerso'
+                      style="position: absolute; bottom:0px; width: 100%; text-align: center;left: 0;padding: 5px;">Photographier
+                      verso</span>
                   </div>
                   <div><img [src]="default" height="45" /></div>
                 </div>
@@ -99,11 +118,12 @@
             </div>
 
             <div style="padding-top:15px !important;" class="formdiv suppl" (click)="verscgu()">
-                <ion-icon style="color: #074a94 !important;" [name]="glb.acceptedcgu ? 'checkmark-circle-outline' : 'radio-button-off'" size="large"></ion-icon>
+              <ion-icon style="color: #074a94 !important;"
+                [name]="glb.acceptedcgu ? 'checkmark-circle-outline' : 'radio-button-off'" size="large"></ion-icon>
               <label class="el-switch custom" style="padding-left:0;display:flex;">
                 <span style="margin-left:10px; font-size:15px;">Accepter les conditions générales d'utilisation</span>
                 <!-- <input type="checkbox" formControlName="ok" name="switch"> -->
-               <!--  <span class="el-switch-style"></span> -->
+                <!--  <span class="el-switch-style"></span> -->
               </label>
             </div>
           </form>
@@ -115,7 +135,8 @@
 <ion-footer>
   <div class="flex2 flexcenter" id="btncontrol">
     <span class="shabot"></span>
-    <button (click)="goback()" >Annuler</button>
-    <button id="btnsvt" [style.background]="!Userdata.valid ? '#CFD8DC' : '#074A94'"  class="btnbleu" [disabled]="!Userdata.valid" (click)="generateOTPCode()" >Suivant</button>
+    <button (click)="goback()">Annuler</button>
+    <button id="btnsvt" [style.background]="!Userdata.valid ? '#CFD8DC' : '#074A94'" class="btnbleu"
+      [disabled]="!Userdata.valid" (click)="generateOTPCode()">Suivant</button>
   </div>
 </ion-footer>

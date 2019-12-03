@@ -30,13 +30,13 @@ export class CodeTransfertPage implements OnInit {
   phones: any[];
 
   constructor(private serv: ServiceService,
-    public glb: GlobalVariableService,
-    private millier: MillierPipe,
-    private modal: ModalController,
-    public contact: Contacts,
-    public popover: PopoverController,
-    private formatcode: FormatcodePipe,
-    private formbuilder: FormBuilder) {
+              public glb: GlobalVariableService,
+              private millier: MillierPipe,
+              private modal: ModalController,
+              public contact: Contacts,
+              public popover: PopoverController,
+              private formatcode: FormatcodePipe,
+              private formbuilder: FormBuilder) {
     this.cashoutForm = formbuilder.group({
       codTrans: ['', Validators.required],
       prenomExp: ['', Validators.required],
@@ -223,6 +223,7 @@ export class CodeTransfertPage implements OnInit {
       parametre.datarecep.RefId = this.refid;
       parametre.datarecep.OrderNum = this.ordernum;
     }
+    parametre.datarecep.telBen = '221' + parametre.datarecep.telBen;
     this.serv.afficheloading();
     this.serv.posts('transfert/ReceptionCash.php', parametre, {}).then(data => {
 

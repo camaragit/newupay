@@ -7,85 +7,86 @@
         
 
           <div class="formdiv releve customfirst" style="width:85%">
-              <label>Choisir le pays * </label>
-              <ion-select (ionChange)="onselectpays()" formControlName="pays" placeholder="Choisir le pays *" interface="popover">
-                <ion-select-option  *ngFor="let country of codepays">{{country}}</ion-select-option>
+              <label>Selectionner un compte bancaire * </label>
+              <ion-select (ionChange)="onCompteSelect()" formControlName="numcompte" placeholder="Choisir un compte *" interface="popover">
+                <ion-select-option  value={{compte.rowid}} *ngFor="let compte of comptes">{{compte.numerocompte}}</ion-select-option>
               </ion-select>
               <div></div>
             </div>
-          <div style="height: 50px;margin-top: 10px;border: 1px solid #b6d3f0;border-radius: 5px;background:#fff;margin-left:10px;padding-left: 10px;padding-right: 10px;display: flex;justify-content: center;align-items:center;width:15%">
-              <span style="line-height:4em !important; width: 20em !important;" ngClass="flag-icon flag-icon-{{flag | lowercase}}"></span>
+ 
+          <div (click)="versAjoutBanque()" style="height: 50px;margin-top: 10px;border: 1px solid #b6d3f0;border-radius: 5px;background:#fff;margin-left:10px;padding-left: 10px;padding-right: 10px;display: flex;justify-content: center;align-items:center;width:15%">
+            <img style="height: 30px;"  src="assets/images/add.png" alt="">
           </div>
         </div>
-  
+  <span *ngIf="databrm.controls.numcompte.value != ''">
       <div class="formdiv releve">
-        <label>Choisir la banque * </label>
-        <ion-select placeholder="Choisir la banque" (ionChange)="onSelectedBank()" formControlName="nombanque" interface="popover">
-          <ion-select-option value="{{bank.abreviation}}" *ngFor="let bank of banques">{{bank.abreviation}}</ion-select-option>
-        </ion-select>
-        <div></div>
-      </div>
-      <div class="formdiv releve">
-          <label>Montant envoi * </label>
-          <input type="number" (input)="resetMontant()" style="color: black; width: 250px !important;" formControlName="montant" placeholder="Entrer le montant ici"/>
+          <label>Pays * </label>
+          <input type="text" readonly style="color: black; width: 250px !important;" formControlName="pays" />
           <div></div>
         </div>
-      <div style="margin-bottom: 10px;" class="flex2 flexcenter" id="btncontrol">
-          <button [style.background]="databrm.controls['montant'].value<=0 ? '#CFD8DC' : '#074A94'" (click)="releveFrais()" [disabled]="databrm.controls['montant'].value<=0" style="height: 46px;width: 100%;border-radius: 5px;margin-top: 15px;" id="btnsvt"
-            class="btnbleu">Obtenir Frais</button>
+        <div class="formdiv releve">
+          <label>Nom Banque * </label>
+          <input type="text" readonly style="color: black; width: 250px !important;" formControlName="nombanque" />
+          <div></div>
         </div>
-
-      <span *ngIf="affiche">
-          <div style="border-left: 5px solid #074A94;margin-top: 20px;" class="formdiv releve">
-              <div style="padding: 1px;">
-                <label>Le total des frais est de :</label> <span style="color:#6f6f6f">{{databrm.controls.frais.value}}
-                  FCFA</span>
+        <div class="formdiv releve">
+          <label>Prénom bénéficiaire * </label>
+          <input type="text" readonly formControlName="prenombeneficiaire" />
+          <div></div>
+        </div>
+    
+        <div class="formdiv releve">
+          <label>Nom bénéficiaire * </label>
+          <input type="text" readonly formControlName="nombeneficiaire" />
+          <div></div>
+        </div>
+        <div class="formdiv releve">
+            <label>Montant envoi * </label>
+            <input type="number" (input)="resetMontant()" style="color: black; width: 250px !important;" formControlName="montant" placeholder="Entrer le montant ici"/>
+            <div></div>
+          </div>
+        <div style="margin-bottom: 10px;" class="flex2 flexcenter" id="btncontrol">
+            <button [style.background]="databrm.controls['montant'].value<=0 ? '#CFD8DC' : '#074A94'" (click)="releveFrais()" [disabled]="databrm.controls['montant'].value<=0" style="height: 46px;width: 100%;border-radius: 5px;margin-top: 15px;" id="btnsvt"
+              class="btnbleu">Obtenir Frais</button>
+          </div>
+  
+        <span *ngIf="affiche">
+            <div style="border-left: 5px solid #074A94;margin-top: 20px;" class="formdiv releve">
+                <div style="padding: 1px;">
+                  <label>Le total des frais est de :</label> <span style="color:#6f6f6f">{{databrm.controls.frais.value}}
+                    FCFA</span>
+                </div>
+        
               </div>
-      
-            </div>
-          <div class="formdiv releve">
-              <label>Prénom bénéficiaire * </label>
-              <input type="text" formControlName="prenombeneficiaire" placeholder="Entrer le prénom ici"/>
-              <div></div>
-            </div>
-        
-            <div class="formdiv releve">
-              <label>Nom bénéficiaire * </label>
-              <input type="text" formControlName="nombeneficiaire" placeholder="Entrer le nom ici"/>
-              <div></div>
-            </div>
-        
-            <div class="formdiv releve">
-              <label>Numéro de compte (RIB) du bénéficiare * </label>
-              <input type="text" [dropSpecialCharacters]="false" mask="AAAAA-00000-0*-00" style="color: black; width: 250px !important;" formControlName="numcompte" placeholder="Saisir numéro ici"/>
-              <div></div>
-            </div>
-            <div style="margin-bottom: 20px; " id="abonnement" class="bodycontent" *ngIf="recentsbenef?.length > 0" >
-              <div class="titrehistorique">Bénéficiaire(s) récent(s)</div>
-              <div *ngFor="let recent of recentsbenef" (click)="selectRecent(recent)" class = "ligne" style="display: flex;"  >
-                <div class="ligneitemfirst" style="align-items: center;border-left: 5px solid green;background: #f6fbf3;">
-                  <img style="width: 70%" src="assets/images/brm.png" alt="">
-                </div>
-                <div class="ligneitem">
-                  <span  class="ligneitem1" style="text-transform: uppercase" >CLIENT</span>
-                  <span  class="ligneitem2" >{{recent.nomclient | replaceString:';':' '}}</span>
-                </div>
-                <div class="ligneitem">
-                    <span class="ligneitem1" style="text-transform: uppercase" >N° COMPTE</span>
-                    <span class="ligneitem2" >{{recent.reference}}</span>
+  
+          
+              <div style="margin-bottom: 20px; " id="abonnement" class="bodycontent" *ngIf="recentsbenef?.length > 0" >
+            
+              </div>
+              
+              <div style="padding: 15px" class="flex2 flexcenter" id="btncontrol">
+                <button [disabled]="!databrm.valid" (click)="deposerSurCompte()" [style.background]="!databrm.valid ? '#CFD8DC' : '#074A94'" style="height: 46px;width: 100%;border-radius: 5px;" id="btnsvt" class="btnbleu" >Valider</button>
+              </div>
+        </span>
+  </span>
+                <div *ngIf="recentsbenef.length >0" class="titrehistorique">Bénéficiaire(s) récent(s)</div>
+                <div *ngFor="let recent of recentsbenef" (click)="selectRecent(recent)" class = "ligne" style="display: flex;"  >
+                  <div class="ligneitemfirst" style="align-items: center;border-left: 5px solid green;background: #f6fbf3;">
+                    <img style="width: 70%" src="assets/images/brm.png" alt="">
                   </div>
                   <div class="ligneitem">
-                      <span style="border: none" style="text-transform: uppercase" class="ligneitem1" >Montant</span>
-                      <span style="border: none" class="ligneitem2" >{{recent.montant}}</span>
+                    <span  class="ligneitem1" style="text-transform: uppercase" >CLIENT</span>
+                    <span  class="ligneitem2" >{{recent.nomclient | replaceString:';':' '}}</span>
+                  </div>
+                  <div class="ligneitem">
+                      <span class="ligneitem1" style="text-transform: uppercase" >N° COMPTE</span>
+                      <span class="ligneitem2" >{{recent.reference}}</span>
                     </div>
-              </div>
-          
-            </div>
-            
-            <div style="padding: 15px" class="flex2 flexcenter" id="btncontrol">
-              <button [disabled]="!databrm.valid" (click)="deposerSurCompte()" [style.background]="!databrm.valid ? '#CFD8DC' : '#074A94'" style="height: 46px;width: 100%;border-radius: 5px;" id="btnsvt" class="btnbleu" >Valider</button>
-            </div>
-      </span>
+                    <div class="ligneitem">
+                        <span style="border: none" style="text-transform: uppercase" class="ligneitem1" >Montant</span>
+                        <span style="border: none" class="ligneitem2" >{{recent.montant}}</span>
+                      </div>
+                </div>
 
     </div>
 

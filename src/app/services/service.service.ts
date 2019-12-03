@@ -5,13 +5,10 @@ import { HTTP } from '@ionic-native/http/ngx';
 import { MillierPipe } from '../pipes/millier.pipe';
 import { GlobalVariableService } from './global-variable.service';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
-import { ConfirmationComponent } from '../components/confirmation/confirmation.component';
-import { FormControl, AbstractControl } from '@angular/forms';
-import { TransfertUniteValeurPage } from '../pages/envoi/transfert-unite-valeur/transfert-unite-valeur.page';
+import { AbstractControl } from '@angular/forms';
 import * as CryptoJS from 'crypto-js';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
-import { PinValidationPage } from '../pages/utilisateur/pin-validation/pin-validation.page';
-import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +25,7 @@ export class ServiceService {
               private sqlitePorter: SQLitePorter,
               public millier: MillierPipe,
               public navCtrl: NavController) {
- 
+
   }
   encryptmessage(message: any) {
 
@@ -53,15 +50,26 @@ export class ServiceService {
       }
     );
   }
+  alterTable() {
+/*     let sql = 'alter table notification add column idnotification INTEGER NOT NULL AUTOINCREMENT';
+    this.glb.LITEDB.executeSql(sql, [])
+    .then(() => {
+      alert('ok')
+    }).catch(err=>{
+      alert('nok '+JSON.stringify(err))
+    }) */
+  }
   createDataBase() {
+    
+    this.droptable();
  /*    this.getDataBase()
       .then((db: SQLiteObject) => { */
         // this.glb.database = db;
         // this.getDataBase();
-        let sql = 'create table if not exists recents(numcompte TEXT,codeoperateur TEXT, sousoperateur TEXT,';
-        sql += 'reference TEXT , nomclient TEXT, datemisajour TEXT, montant TEXT)';
+    let sql = 'create table if not exists recents(numcompte TEXT,codeoperateur TEXT, sousoperateur TEXT,';
+    sql += 'reference TEXT , nomclient TEXT, datemisajour TEXT, montant TEXT)';
         // sql = 'drop table recents';
-        this.glb.LITEDB.executeSql(sql, [])
+    this.glb.LITEDB.executeSql(sql, [])
           .then(() => {
             // sql = 'drop table favoris';
             sql = ' create table if not exists favoris(numcompte TEXT,codeoperateur TEXT, sousoperateur TEXT';
@@ -70,15 +78,44 @@ export class ServiceService {
               sql = 'create table if not exists wallet (numcompte TEXT,codeoperateur TEXT,';
               sql += ' image TEXT, chemin TEXT, telephone TEXT, libelle TEXT)';
               this.glb.LITEDB.executeSql(sql, []).then(() => {
-                sql = 'create table if not exists notification(titre, message,date,image,data,datecomplet)';
-                this.glb.LITEDB.executeSql(sql, []).then(() => {});
+                sql = 'create table if not exists notification(titre TEXT, message TEXT,date TEXT,image TEXT,data TEXT,datecomplet TEXT)';
+                this.glb.LITEDB.executeSql(sql, []).then(() => {
+                  // tslint:disable-next-line: max-line-length
+                  sql = 'create table if not exists comptebancaires(pays TEXT, nombanque TEXT, nombeneficiaire TEXT, prenombeneficiaire TEXT, numerocompte TEXT)';
+                  this.glb.LITEDB.executeSql(sql, []).then(() => {}).catch((err) => {console.log(sql + ' ', err); });
+                 // sql = 'ALTER TABLE notification ADD idnotification INTEGER PRIMARY KEY AUTOINCREMENT';
+     /*              this.glb.LITEDB.executeSql(sql, []).then(()=>{
+                    console.log('table notification modifié avec succces');
+                  }); */
+                }).catch(err => {console.log(sql + ' ', err); });
               });
             });
           })
-          .catch(e => console.log(e));
+          .catch(e => console.log('',e));
 
     /*   })
       .catch(e => console.log(e)); */
+  }
+  updateCompte(bank: any, mode: any) {
+    let sql = 'delete from comptebancaires where rowid = ?';
+    let values = [bank.rowid];
+    this.glb.LITEDB.executeSql(sql, values)
+    .then((res) => {
+      if (mode === 'update') {
+         sql = 'INSERT INTO comptebancaires VALUES(?,?,?,?,?)';
+         values = [bank.pays, bank.nombanque, bank.nombeneficiaire, bank.prenombeneficiaire, bank.numerocompte];
+         this.glb.LITEDB.executeSql(sql, values)
+         .then((res) => {
+           this.showToast('Compte modifié avec succès! ');
+           this.navCtrl.navigateBack('compte/banque');
+         })
+         .catch(e => { });
+      } else {
+        this.showToast('Compte supprimé avec succès! ');
+        this.navCtrl.navigateBack('compte/banque');
+      }
+     })
+    .catch(e => console.log(e));
   }
   insert(clientData: any) {
 /*     this.getDataBase()
@@ -127,7 +164,7 @@ export class ServiceService {
   getAllnotification(paramDate: any = '') {
     paramDate += '';
     this.glb.notifications = [];
-    let sql = 'select titre,image,message,date,data,datecomplet from notification where date like ';
+    let sql = 'select rowid,titre,image,message,date,data,datecomplet from notification where date like ';
     sql += '\'%' + paramDate + '%\' order by date desc';
     console.log(sql);
     const values = [];
@@ -165,6 +202,19 @@ export class ServiceService {
            // alert(JSON.stringify(this.glb.notifications));
           }
           });
+  }
+
+  insertBanque(bank: any) {
+    console.log('bank ', bank);
+    const sql = 'INSERT INTO comptebancaires VALUES(?,?,?,?,?)';
+    const values = [bank.pays, bank.nombanque, bank.nombeneficiaire, bank.prenombeneficiaire, bank.numerocompte];
+    this.glb.LITEDB.executeSql(sql, values)
+    .then((res) => {
+      this.showToast('Compte Ajouté avec succès! ');
+      this.navCtrl.navigateBack('compte/banque');
+    })
+    .catch(e => {console.log('err ', e); });
+
   }
 
   insertWallet(wallet: any) {
@@ -271,8 +321,8 @@ export class ServiceService {
   export() {
     this.sqlitePorter.exportDbToSql(this.glb.LITEDB).then((db) => {alert(JSON.stringify(db)); });
   }
-  deletealldata() {
-    const sql = 'drop table wallet ';
+  droptable() {
+    const sql = 'drop table if exists comptebancaire ';
     const values = [];
 
         // const sql = 'delete from recents where reference =\'108000008611\' ';
@@ -287,7 +337,7 @@ export class ServiceService {
     return this.sqlite.create({
       name: 'recents.db',
       location: 'default'
-    }).then((db: SQLiteObject) => {this.glb.LITEDB = db; });
+    });
   }
   CheckIfSequence(valeur: any) {
     if (valeur !== null) {
@@ -394,7 +444,7 @@ export class ServiceService {
           this.loading = null;
         } */
   }
-  get(service: string, parametres: any= {}, headers: any = {}){
+  get(service: string, parametres: any= {}, headers: any = {}) {
     this.http.setDataSerializer('json');
     this.http.setSSLCertMode('nocheck');
     this.http.setRequestTimeout(90);
@@ -410,7 +460,8 @@ export class ServiceService {
       this.http.setDataSerializer('json');
       this.http.setSSLCertMode('nocheck');
       this.http.setRequestTimeout(90);
-      // alert('Body ' + JSON.stringify(body));
+      console.log('Body ' + JSON.stringify(body));
+      console.log('URL ' + url);
       return this.http.post(url, body, headers);
     }
 
@@ -598,7 +649,9 @@ export class ServiceService {
         if (plafond.returnCode === '0') {
           this.glb.ShowSolde = true;
           this.glb.dateUpdate = this.getCurrentDate();
-          this.glb.HEADER.montant = this.millier.transform(plafond.mntPlf);
+          let  plf: any = plafond.mntPlf * 1 - plafond.consome * 1;
+          plf += '';
+          this.glb.HEADER.montant = this.millier.transform(plf);
 
           this.glb.HEADER.numcompte = plafond.numcompte;
           this.glb.HEADER.consomme = this.millier.transform(plafond.consome);
